@@ -30,13 +30,12 @@
       <version>${wicket.version}</version>
     </dependency>
 
-    <!-- optional
+    <!-- Required for security stuff -->
     <dependency>
       <groupId>org.apache.wicket</groupId>
-      <artifactId>wicket-extensions</artifactId>
+      <artifactId>wicket-auth-roles</artifactId>
       <version>${wicket.version}</version>
     </dependency>
-    -->
 
     <dependency>
       <groupId>org.slf4j</groupId>
