@@ -1,40 +1,45 @@
 <wicket:extend>
     <div id="main" class="upload">
-	    <h3>Apache Con Memories</h3>
-	    <h1>Upload Image</h1>
-	    
-	    <div id="upload-box">
-		    
-		    <div class="upload-image">
-			    <div class="dummy-input">
-				    <input class="left" type="text" />
-				    <div class="button browse">Browse</div>
-			    </div>
-			    <input class="file-input" name="filesToUpload[]" id="filesToUpload" type="file" multiple="" onchange="uploadImages();" />
-		    </div>
+        <h3>Apache Con Memories</h3>
+        <h1>Upload Image</h1>
+        
+        <div id="upload-box">
+            <div wicket:id="feedback">
+            
+            </div>
 
-		    
-		    <div id="file-list"></div>
-	    </div>
-	    
-	    <div id="latest-uploads">
-		    <div class="right"><a href="upload.html">View All</a></div>
-		    <h4>Lastest Uploads</h4>
-		    
-		    <div id="thumbs">
-			    <div class="item"><img src="img/upload_image.png" /></div>
-			    <div class="item"><img src="img/upload_image.png" /></div>
-			    <div class="item"><img src="img/upload_image.png" /></div>
-			    <div class="item last"><img src="img/upload_image.png" /></div>
-			    <div class="item"><img src="img/upload_image.png" /></div>
-			    <div class="item"><img src="img/upload_image.png" /></div>
-			    <div class="item"><img src="img/upload_image.png" /></div>
-			    <div class="item last"><img src="img/upload_image.png" /></div>
-			    <div class="item"><img src="img/upload_image.png" /></div>
-			    <div class="item"><img src="img/upload_image.png" /></div>
-			    <div class="item"><img src="img/upload_image.png" /></div>
-			    <div class="item last"><img src="img/upload_image.png" /></div>
-		    </div>
-	    </div>
+            <form wicket:id="uploadForm" class="upload-image">
+<!--                 <div class="dummy-input"> -->
+<!--                     <input class="left" type="text" /> -->
+<!--                     <div class="button browse">Browse</div> -->
+<!--                 </div> -->
+                <input wicket:id="uploadField" class="file-input" name="filesToUpload[]" 
+                    id="filesToUpload" type="file" />
+                <input wicket:id ="submit" type="submit" />
+            </form>
+
+            
+            <div id="file-list"></div>
+        </div>
+        
+        <div id="latest-uploads">
+            <div class="right"><a href="upload.html">View All</a></div>
+            <h4>Lastest Uploads</h4>
+            
+            <div id="thumbs">
+                <div class="item"><img src="img/upload_image.png" /></div>
+                <div class="item"><img src="img/upload_image.png" /></div>
+                <div class="item"><img src="img/upload_image.png" /></div>
+                <div class="item last"><img src="img/upload_image.png" /></div>
+                <div class="item"><img src="img/upload_image.png" /></div>
+                <div class="item"><img src="img/upload_image.png" /></div>
+                <div class="item"><img src="img/upload_image.png" /></div>
+                <div class="item last"><img src="img/upload_image.png" /></div>
+                <div class="item"><img src="img/upload_image.png" /></div>
+                <div class="item"><img src="img/upload_image.png" /></div>
+                <div class="item"><img src="img/upload_image.png" /></div>
+                <div class="item last"><img src="img/upload_image.png" /></div>
+            </div>
+        </div>
     </div>
 </wicket:extend>
