@@ -140,7 +140,8 @@
                                 <feature>camel-bam</feature>
                                 <feature>camel-bean-validator</feature>
                                 <feature>camel-bindy</feature>
-                                <feature>camel-cometd</feature>
+                                <!-- New version not yet propagated to maven repository -->
+                                <!-- feature>camel-cometd</feature -->
                                 <feature>camel-csv</feature>
                                 <feature>camel-dozer</feature>
                                 <!-- Disable this feature as there is a mistake in, see CAMEL-3637 -->
@@ -316,20 +317,6 @@
                                 <descriptor>src/main/descriptors/win-bin.xml</descriptor>
                             </descriptors>
                             <appendAssemblyId>false</appendAssemblyId>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>examples</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <descriptors>
-                                <descriptor>src/main/descriptors/examples.xml</descriptor>
-                            </descriptors>
-                            <appendAssemblyId>true</appendAssemblyId>
-                            <tarLongFileMode>gnu</tarLongFileMode>
                         </configuration>
                     </execution>
                 </executions>
