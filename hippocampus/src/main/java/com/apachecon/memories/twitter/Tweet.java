@@ -19,7 +19,10 @@ package com.apachecon.memories.twitter;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Tweet implements Serializable {
 	private static final long serialVersionUID = 1L;
 

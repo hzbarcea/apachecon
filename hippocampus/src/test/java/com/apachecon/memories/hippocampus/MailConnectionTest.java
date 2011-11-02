@@ -47,8 +47,8 @@ public class MailConnectionTest extends CamelSpringTestSupport {
         Exchange ex1 = endpoint.createExchange();
         Message in = ex1.getIn();
         in.setBody("Hello World");
-        in.addAttachment("logo.jpeg", new DataHandler(new FileDataSource("src/test/resources/logo.jpeg")));
-        in.addAttachment("bubble.png", new DataHandler(new FileDataSource("src/test/resources/bubble.png")));
+        in.addAttachment("feather-small.gif", new DataHandler(new FileDataSource("src/test/resources/img/feather-small.gif")));
+        in.addAttachment("talend-logo", new DataHandler(new FileDataSource("src/test/resources/img/talend-logo.jpg")));
 
         Exchange ex2 = endpoint.createExchange();
         ex2.getIn().setBody("Bye World... without attachments");

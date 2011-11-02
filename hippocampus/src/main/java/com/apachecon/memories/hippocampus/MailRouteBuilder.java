@@ -29,7 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MailRouteBuilder extends RouteBuilder {
-	private static final Logger LOG = LoggerFactory.getLogger(MailConnectionTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MailRouteBuilder.class);
 	private static final UuidGenerator UUID_GEN = new JavaUuidGenerator();
 
 	@Override

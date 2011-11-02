@@ -18,7 +18,10 @@ package com.apachecon.memories.twitter;
 
 import java.io.Serializable;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Metadata implements Serializable {
 	private static final long serialVersionUID = 1L;
 
