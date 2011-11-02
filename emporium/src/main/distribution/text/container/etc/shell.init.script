@@ -1,0 +1,9 @@
+// Copyright (C) 2011 The Apache Software Foundation - http://www.apache.org
+
+// This script is run each time a shell is created.
+// You can define here closures or variables that will be available
+// in each session.
+//
+ld = { log:display $args } ;
+lde = { log:display-exception $args } ;
+la = { osgi:list -t 0 $args } ;
