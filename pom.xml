@@ -74,7 +74,7 @@
 
   <modules>
     <module>scrapbook</module>
-    <!-- module>speechbubble</module -->
+    <module>speechbubble</module>
     <!-- module>hippocampus</module -->
     <!-- module>branding</module -->
   </modules>
