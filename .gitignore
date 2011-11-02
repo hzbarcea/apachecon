@@ -1,6 +1,8 @@
-*.classpath
-*.project
-*.settings
-*target
+target
+*.i??
 .DS_Store
-bin
+.classpath
+.project
+.settings
+.checkstyle
+*.log

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+
+<!-- Configures the Camel Context-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:amq="http://activemq.apache.org/schema/core"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+       http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+
+  <!-- This creates an embedded ActiveMQ Broker -->
+  <broker xmlns="http://activemq.apache.org/schema/core" useJmx="false" persistent="false">
+    <transportConnectors>
+      <transportConnector uri="tcp://localhost:61616" />
+    </transportConnectors>
+  </broker>
+
+  <!-- Lets connect the Camel ActiveMQ component to the embedded broker.
+       See http://camel.apache.org/activemq.html for more information.
+  -->
+  <bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
+    <property name="brokerURL" value="failover:tcp://localhost:61616"/>
+  </bean>
+
+  <bean id="properties" class="org.apache.camel.component.properties.PropertiesComponent">
+    <property name="location" value="classpath:memories-test.properties"/>
+  </bean>
+
+  <bean id="speechBubble" class="com.apachecon.memories.speechbubble.SpeechBubble" />
+  <bean id="imageHandler" class="com.apachecon.memories.hippocampus.ImageHandler" />
+  <bean id="twitterSearch" class="com.apachecon.memories.twitter.TwitterSearch" />
+  <bean id="defaultAggregator" class="com.apachecon.memories.twitter.TwitterSearch" factory-method="defaultAggregation" />
+  <bean id="foobar" class="com.apachecon.memories.twitter.TwitterSearch" factory-method="defaultFoo" />
+
+  <!--TODO: add route description -->
+  <camelContext trace="true" xmlns="http://camel.apache.org/schema/spring">
+    <package>com.apachecon.memories</package>
+
+    <!-- json jackson data formats to be used -->
+    <dataFormats>
+      <!-- json data format for Twitter searches -->
+      <json id="twitter" library="Jackson" unmarshalTypeName="com.apachecon.memories.twitter.Search"/>
+    </dataFormats>
+
+    <route>
+      <from uri="seda:tweets" />
+      <setHeader headerName="TwitterSearch"><constant>http://search.twitter.com/search.json?q=apachecon&amp;since_id=131073333025447936</constant></setHeader>
+      <routingSlip><header>TwitterSearch</header></routingSlip>
+      <unmarshal ref="twitter" />
+      <setHeader headerName="NextPage"><simple>${body.next_page}</simple></setHeader>
+      <to uri="bean:foobar" />
+      <split>
+        <method bean="twitterSearch" method="tweets" />
+        <to uri="activemq:memories.tweets" />
+      </split>
+      <choice>
+        <when>
+          <simple>${header.TwitterSearch} contains '?page'</simple>
+        </when>
+        <otherwise>
+        </otherwise>
+      </choice>
+      <setBody><simple>http://search.twitter.com/search.json${header.NextPage}</simple></setBody>
+      <to uri="log:BARFOO" />
+    </route>
+
+    <route>
+      <from uri="activemq:memories.tweets" />
+      <to uri="log:TWEET" />
+      <setHeader headerName="CamelFileName"><simple>${body.id_str}</simple></setHeader>
+      <setHeader headerName="CamelFileParent"><constant>/x1/apachecon/tmp</constant></setHeader>
+      <setBody><simple>${body.text}</simple></setBody>
+      <bean ref="speechBubble" method="generateBubbleImage" />
+      <setHeader headerName="Content-Type">
+        <constant>image/png</constant>
+      </setHeader>
+      <bean ref="imageHandler" method="writeImage" />
+    </route>
+  </camelContext>
+
+</beans>
