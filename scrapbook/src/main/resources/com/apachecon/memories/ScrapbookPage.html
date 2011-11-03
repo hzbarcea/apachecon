@@ -16,17 +16,17 @@
     <body>
       <div id="wrapper">
         <div id="header">
-            <a id="logo" href="index.html">
+            <a wicket:id="logo" id="logo">
             </a>
 
             <div id="main-menu">
-                <wicket:link>
-                    <ul>
-                        <li class="active"><a href="Index.html">index</a></li>
-                        <li><a href="Upload.html">upload</a></li>
-                        <li><a href="Approve.html">approve</a></li>
-                     </ul>
-                </wicket:link>
+                <ul>
+                    <li wicket:id="menu">
+                        <a wicket:id="link">
+                            <span wicket:id="label">Label</span>
+                        </a>
+                    </li>
+                 </ul>
             </div>
         </div>
 
@@ -34,7 +34,7 @@
         <wicket:child />
 
         <div id="footer">
-            <div id="bnr-con"></div>
+            <a wicket:id="apacheCon" id="bnr-con"></a>
             <div id="copyright">&copy; 2011 The Apache Software Foundation.</div>
         </div>
 

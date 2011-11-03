@@ -1,7 +1,16 @@
 package com.apachecon.memories;
 
+import com.apachecon.memories.service.ApprovalService;
+import com.apachecon.memories.service.DefaultImageService;
+import com.apachecon.memories.service.ImageService;
+import com.apachecon.memories.session.Logout;
 import com.apachecon.memories.session.MemoriesWebSession;
 import com.apachecon.memories.session.SignIn;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
+
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.markup.html.WebPage;
@@ -13,6 +22,8 @@ import org.apache.wicket.markup.html.WebPage;
  * @see com.apachecon.memories.Start#main(String[])
  */
 public class ScrapbookApplication extends AuthenticatedWebApplication {
+
+    private DefaultImageService imageService;
 
     /**
      * @see org.apache.wicket.Application#getHomePage()
@@ -27,12 +38,23 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
      */
     @Override
     public void init() {
-//        mountPage("/index.html", Index.class);
-//        mountPackage("/signin.html", SignIn.class);
-//        mountPackage("/aprove.html", SignIn.class);
-//        mountPackage("/upload.html", Upload.class);
+        mountPage("/index", Index.class);
+        mountPackage("/signin", SignIn.class);
+        mountPackage("/logout", Logout.class);
+        mountPackage("/aprove", Approve.class);
+        mountPackage("/upload", Upload.class);
         super.init();
 
+        Properties props = new Properties();
+        try {
+            props.load(getClass().getResourceAsStream("/deploy.properties"));
+        } catch (IOException e) {
+            
+        }
+        imageService = new DefaultImageService();
+        imageService.setUploadDirectory(new File(props.getProperty("upload")));
+        imageService.setAproveDirectory(new File(props.getProperty("approve")));
+        imageService.setDeclineDirectory(new File(props.getProperty("decline")));
     }
 
     @Override
@@ -45,4 +67,11 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
         return MemoriesWebSession.class;
     }
 
+    public ImageService getImageService() {
+        return imageService;
+    }
+
+    public ApprovalService getApprovalService() {
+        return null;
+    }
 }

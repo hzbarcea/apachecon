@@ -1,8 +1,7 @@
 package com.apachecon.memories;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import com.apachecon.memories.service.ImageService;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -13,8 +12,6 @@ import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.MultiFileUploadField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.lang.Bytes;
 
 /**
@@ -30,9 +27,15 @@ public class Upload extends ScrapbookPage {
 
     private String[] contentTypes = new String[] {"image/jpeg", "image/jpg", "image/png", "image/gif"};
 
+    private transient ImageService imageService;
 
-    public Upload(final PageParameters parameters) {
+    public Upload() {
+        imageService = ((ScrapbookApplication) getApplication()).getImageService();
+
         add(new FeedbackPanel("feedback"));
+
+        add(new Thumbs("thumbs", 12, 4, imageService.getAproved()));
+
         Form<Void> form = new Form<Void>("uploadForm") {
             {
                 setMultiPart(true);
@@ -48,24 +51,11 @@ public class Upload extends ScrapbookPage {
                         Upload.this.warn("File " + upload.getClientFileName() + " is not supported. Only images can be shared");
                     } else {
                         try {
-                            InputStream is = upload.getInputStream();
-                            File uploadDir = new File("target/uploads");
-                            uploadDir.mkdirs();
-
-                            File file = new File(uploadDir, upload.getClientFileName());
-                            FileOutputStream os = new FileOutputStream(file);
-
-                            byte[] buffer = new byte[512];
-                            int length = 0;
-                            while ((length = is.read(buffer)) > 0) {
-                                os.write(buffer, 0, length);
-                            }
-
-                            is.close();
-                            os.close();
+                            imageService.newFile(upload);
 
                             Upload.this.info("File " + upload.getClientFileName() + " has been uploaded and now it waiting for approval");
-                        } catch (IOException e) { 
+                        } catch (Exception e) {
+                            logger.error("Error processing uploaded file", e);
                             Upload.this.error("An error occured during file upload.");
                         }
                     }

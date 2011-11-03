@@ -121,6 +121,8 @@ input{
 		background: transparent url(img/bnr_con.png) no-repeat;
 		height: 128px;
 		width: 950px;
+		display: block;
+		text-decoration: none;
 	}
 	#footer #copyright{
 		margin: 50px 0 50px 10px;
