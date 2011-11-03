@@ -26,6 +26,12 @@ public class MemoriesWebSession extends AuthenticatedWebSession {
 
     @Override
     public boolean authenticate(String username, String password) {
+
+        if (username.trim().length() == 0 || password.trim().length() == 0) {
+            warn("Provide user and password");
+            return false;
+        }
+
         if (users.getProperty(username) != null) {
             if (users.getProperty(username).equals(MD5Util.encode(password))) {
                 roles = new Roles("admin");

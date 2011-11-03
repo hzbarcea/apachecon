@@ -2,6 +2,7 @@ package com.apachecon.memories.service;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +13,13 @@ import java.util.UUID;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 
 public class DefaultImageService implements ImageService {
+
+    private static final FilenameFilter FILTER = new FilenameFilter() {
+        @Override
+        public boolean accept(File dir, String name) {
+            return name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".gif");
+        }
+    };
 
     private File aproveDirectory;
     private File declineDirectory;
@@ -37,12 +45,12 @@ public class DefaultImageService implements ImageService {
 
     @Override
     public List<File> getAproved() {
-        return list(aproveDirectory.listFiles());
+        return list(aproveDirectory.listFiles(FILTER));
     }
 
     @Override
     public List<File> getDecline() {
-        return list(declineDirectory.listFiles());
+        return list(declineDirectory.listFiles(FILTER));
     }
 
     private List<File> list(File[] listFiles) {
@@ -57,7 +65,7 @@ public class DefaultImageService implements ImageService {
         List<File> files = new ArrayList<File>();
         files.addAll(getAproved());
         files.addAll(getDecline());
-        Collections.shuffle(files);
+        //Collections.shuffle(files);
         return files;
     }
 

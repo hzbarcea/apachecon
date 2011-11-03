@@ -15,6 +15,7 @@ import java.util.Properties;
 
 import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
+import org.apache.wicket.authentication.strategy.NoOpAuthenticationStrategy;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.markup.html.WebPage;
@@ -49,6 +50,9 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
         mountPackage("/aprove", Approve.class);
         mountPackage("/upload", Upload.class);
         super.init();
+
+        // disable cookie with user/pass, it's not safe
+        getSecuritySettings().setAuthenticationStrategy(new NoOpAuthenticationStrategy());
 
         Properties props = new Properties();
         try {
