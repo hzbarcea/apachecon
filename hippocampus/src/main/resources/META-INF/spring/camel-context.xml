@@ -94,6 +94,13 @@
       </setHeader>
       <bean ref="imageHandler" method="writeImage" />
     </route>
+
+    <route>
+      <from uri="{{schedule.generate.thumbnails}}" />
+      <setHeader headerName="CamelExecCommandArgs"><constant>foobar</constant></setHeader>
+      <to uri="exec:{{script.generate.thumbnails}}" />
+    </route>
+      
   </camelContext>
 
 </beans>
