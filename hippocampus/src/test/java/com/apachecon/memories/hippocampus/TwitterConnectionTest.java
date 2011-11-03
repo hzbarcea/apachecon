@@ -75,6 +75,6 @@ public class TwitterConnectionTest extends CamelSpringTestSupport {
 */
         // assertTrue(mock.assertExchangeReceived(0).getIn().getBody() instanceof Tweet);
         // s = mock.assertExchangeReceived(0).getIn().getBody(Search.class);
-        Thread.sleep(15000);
+        Thread.sleep(5000);
     }
 }
