@@ -30,7 +30,7 @@ public class Upload extends ScrapbookPage {
     private transient ImageService imageService;
 
     public Upload() {
-        imageService = ((ScrapbookApplication) getApplication()).getImageService();
+        imageService = ((ScrapbookApplication)getApplication()).getImageService();
 
         add(new FeedbackPanel("feedback"));
 
@@ -48,12 +48,14 @@ public class Upload extends ScrapbookPage {
 
                 for (FileUpload upload : uploaded) {
                     if (Arrays.binarySearch(contentTypes, upload.getContentType()) == -1) {
-                        Upload.this.warn("File " + upload.getClientFileName() + " is not supported. Only images can be shared");
+                        Upload.this.warn("File " + upload.getClientFileName()
+                                         + " is not supported. Only images can be shared");
                     } else {
                         try {
                             imageService.newFile(upload);
 
-                            Upload.this.info("File " + upload.getClientFileName() + " has been uploaded and now it waiting for approval");
+                            Upload.this.info("File " + upload.getClientFileName()
+                                             + " has been uploaded and now it waiting for approval");
                         } catch (Exception e) {
                             logger.error("Error processing uploaded file", e);
                             Upload.this.error("An error occured during file upload.");

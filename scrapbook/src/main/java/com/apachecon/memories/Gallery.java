@@ -17,7 +17,7 @@ public class Gallery extends Panel {
         GalleryFrame container = new GalleryFrame(frames.newChildId());
 
         for (File file : model) {
-            if ((++itemCount % 12) == 0) {
+            if (++itemCount % 12 == 0) {
                 container = new GalleryFrame(frames.newChildId());
                 frames.add(container);
             }

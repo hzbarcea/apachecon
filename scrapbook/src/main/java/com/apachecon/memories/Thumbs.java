@@ -31,7 +31,7 @@ public class Thumbs extends Panel {
 
             repeater.add(container);
 
-            if ((++itemCount % rowElements) == 0) {
+            if (++itemCount % rowElements == 0) {
                 container.add(AttributeModifier.append("class", "last"));
             }
 
@@ -42,6 +42,5 @@ public class Thumbs extends Panel {
 
         add(repeater);
     }
-
 
 }

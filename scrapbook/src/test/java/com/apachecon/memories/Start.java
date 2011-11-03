@@ -10,7 +10,7 @@ import org.eclipse.jetty.webapp.WebAppContext;
 
 public class Start {
     public static void main(String[] args) throws Exception {
-        int timeout = (int) Duration.ONE_HOUR.getMilliseconds();
+        int timeout = (int)Duration.ONE_HOUR.getMilliseconds();
 
         Server server = new Server();
         SocketConnector connector = new SocketConnector();
@@ -21,12 +21,12 @@ public class Start {
         connector.setPort(8080);
         server.addConnector(connector);
 
-		// check if a keystore for a SSL certificate is available, and
-		// if so, start a SSL connector on port 8443. By default, the
-		// quickstart comes with a Apache Wicket Quickstart Certificate
-		// that expires about half way september 2021. Do not use this
-		// certificate anywhere important as the passwords are available
-		// in the source.
+        // check if a keystore for a SSL certificate is available, and
+        // if so, start a SSL connector on port 8443. By default, the
+        // quickstart comes with a Apache Wicket Quickstart Certificate
+        // that expires about half way september 2021. Do not use this
+        // certificate anywhere important as the passwords are available
+        // in the source.
 
         Resource keystore = Resource.newClassPathResource("/keystore");
         if (keystore != null && keystore.exists()) {

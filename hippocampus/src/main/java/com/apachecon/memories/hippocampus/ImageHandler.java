@@ -16,6 +16,8 @@
  */
 package com.apachecon.memories.hippocampus;
 
+import com.apachecon.memories.speechbubble.ImageWriter;
+
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,59 +31,56 @@ import org.apache.camel.util.ObjectHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.apachecon.memories.speechbubble.ImageWriter;
-
 public class ImageHandler {
-	private static final Logger LOG = LoggerFactory.getLogger(ImageHandler.class);
-	private static final String CONTENT_TYPE_PREFIX = "image/";
+    private static final Logger LOG = LoggerFactory.getLogger(ImageHandler.class);
+    private static final String CONTENT_TYPE_PREFIX = "image/";
 
     public ImageHandler() {
-    	// Complete
+        // Complete
     }
 
-    public void writeAttachment(@Body DataHandler dh, 
-        @Header(value = "CamelFileName") String filename, 
-        @Header(value = "CamelFileParent") String parent) throws IOException {
+    public void writeAttachment(@Body DataHandler dh, @Header(value = "CamelFileName") String filename,
+                                @Header(value = "CamelFileParent") String parent) throws IOException {
 
-    	// Substitute name if needed.
-		String fn = dh.getName();
-    	if (!ObjectHelper.isEmpty(filename)) {
-    		int pos = fn.lastIndexOf('.');
-    		filename = pos < 0 ? filename : filename + fn.substring(pos);
-    	} else {
-    		filename = fn;
-    	}
-    	
-    	File out = !ObjectHelper.isEmpty(parent) ? new File(new File(parent), filename) : new File(filename);
-    	LOG.info("Writing '{}' attachment to file: {}", fn, out.getAbsolutePath());
+        // Substitute name if needed.
+        String fn = dh.getName();
+        if (!ObjectHelper.isEmpty(filename)) {
+            int pos = fn.lastIndexOf('.');
+            filename = pos < 0 ? filename : filename + fn.substring(pos);
+        } else {
+            filename = fn;
+        }
 
-    	FileOutputStream fos = new FileOutputStream(out);
-    	dh.writeTo(fos);
-    	fos.flush();
-    	fos.close();
+        File out = !ObjectHelper.isEmpty(parent) ? new File(new File(parent), filename) : new File(filename);
+        LOG.info("Writing '{}' attachment to file: {}", fn, out.getAbsolutePath());
+
+        FileOutputStream fos = new FileOutputStream(out);
+        dh.writeTo(fos);
+        fos.flush();
+        fos.close();
     }
 
-    public void writeImage(@Body RenderedImage img, 
-            @Header(value = "CamelFileName") String filename, 
-            @Header(value = "CamelFileParent") String parent, 
-            @Header(value = "Content-Type") String contentType) throws IOException {
+    public void writeImage(@Body RenderedImage img, @Header(value = "CamelFileName") String filename,
+                           @Header(value = "CamelFileParent") String parent,
+                           @Header(value = "Content-Type") String contentType) throws IOException {
 
-    	String ct = getContentType(contentType);
-    	if (ObjectHelper.isEmpty(ct) || !ct.startsWith(CONTENT_TYPE_PREFIX)) {
-    		LOG.warn("Content-Type not provided or invalid {}. Request ignored", contentType);
-    	}
-    	ImageWriter.write(img, filename, parent, ct.substring(CONTENT_TYPE_PREFIX.length()));
+        String ct = getContentType(contentType);
+        if (ObjectHelper.isEmpty(ct) || !ct.startsWith(CONTENT_TYPE_PREFIX)) {
+            LOG.warn("Content-Type not provided or invalid {}. Request ignored", contentType);
+        }
+        ImageWriter.write(img, filename, parent, ct.substring(CONTENT_TYPE_PREFIX.length()));
     }
 
     public static String getContentType(String contentType) {
-    	int semi = contentType == null ? -1 : contentType.indexOf(';');
-    	return semi >= 0 ? contentType.substring(0, semi) : contentType;
+        int semi = contentType == null ? -1 : contentType.indexOf(';');
+        return semi >= 0 ? contentType.substring(0, semi) : contentType;
     }
 
     public static boolean isImage(String contentTypeHeader) {
-    	String contentType = getContentType(contentTypeHeader);
-    	int slash = contentType == null ? -1 : contentType.indexOf('/');
-    	return slash >= 0 && ("image".equals(contentType.substring(0, slash)) 
-            || "application/octet-stream".equals(contentType));
+        String contentType = getContentType(contentTypeHeader);
+        int slash = contentType == null ? -1 : contentType.indexOf('/');
+        return slash >= 0
+               && ("image".equals(contentType.substring(0, slash)) || "application/octet-stream"
+                   .equals(contentType));
     }
 }

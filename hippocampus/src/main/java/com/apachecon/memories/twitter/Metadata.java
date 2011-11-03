@@ -20,17 +20,17 @@ import java.io.Serializable;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Metadata implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String result_type;
+    private String result_type;
 
-	public String getResult_type() {
-		return result_type;
-	}
-	public void setResult_type(String result_type) {
-		this.result_type = result_type;
-	}
+    public String getResult_type() {
+        return result_type;
+    }
+
+    public void setResult_type(String result_type) {
+        this.result_type = result_type;
+    }
 }

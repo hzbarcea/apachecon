@@ -24,37 +24,37 @@ import org.apache.camel.util.ExchangeHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class TwitterSearch {
-	private static final Logger LOG = LoggerFactory.getLogger(TwitterSearch.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TwitterSearch.class);
 
-	public List<Tweet> tweets(Search search) {
-		return search.getResults();
-	}
-	
-	public static AggregationStrategy defaultAggregation() {
-		return new TweetsAggregation();
-	}
+    public List<Tweet> tweets(Search search) {
+        return search.getResults();
+    }
 
-	public static Foo defaultFoo() {
-		return new Foo();
-	}
+    public static AggregationStrategy defaultAggregation() {
+        return new TweetsAggregation();
+    }
 
-	// Default AggregationStrategy for (poll)Enrich
-	private static class TweetsAggregation implements AggregationStrategy {
+    public static Foo defaultFoo() {
+        return new Foo();
+    }
+
+    // Default AggregationStrategy for (poll)Enrich
+    private static class TweetsAggregation implements AggregationStrategy {
         public Exchange aggregate(Exchange oldExchange, Exchange newExchange) {
-        	// ignore request, just use newExchange, the result of Enrich
-        	if (oldExchange != null) {
+            // ignore request, just use newExchange, the result of Enrich
+            if (oldExchange != null) {
                 ExchangeHelper.copyResultsPreservePattern(oldExchange, newExchange);
-        	}
-        	return oldExchange;
+            }
+            return oldExchange;
         }
     }
-	public static class Foo {
-		public void bar(Search search) {
-			if (search.getNext_page() != null) {
-				LOG.info("FOOBAR: next_page: {}", search.getNext_page());
-			}
-		}
-	}
+
+    public static class Foo {
+        public void bar(Search search) {
+            if (search.getNext_page() != null) {
+                LOG.info("FOOBAR: next_page: {}", search.getNext_page());
+            }
+        }
+    }
 }

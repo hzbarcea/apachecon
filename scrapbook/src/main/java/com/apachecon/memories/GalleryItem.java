@@ -31,12 +31,12 @@ public class GalleryItem extends Panel {
             @Override
             public void onClick() {
                 RequestCycle.get().scheduleRequestHandlerAfterCurrent(new IRequestHandler() {
-                    
+
                     @Override
                     public void respond(IRequestCycle requestCycle) {
-                        WebResponse response = (WebResponse) requestCycle.getResponse();
+                        WebResponse response = (WebResponse)requestCycle.getResponse();
                         String name = file.getName();
-                        response.setContentType("image/"+ name.substring(name.lastIndexOf('.') + 1));
+                        response.setContentType("image/" + name.substring(name.lastIndexOf('.') + 1));
 
                         try {
                             InputStream is = new FileInputStream(file);
@@ -56,7 +56,7 @@ public class GalleryItem extends Panel {
                     @Override
                     public void detach(IRequestCycle requestCycle) {
                         // TODO Auto-generated method stub
-                        
+
                     }
                 });
             }
