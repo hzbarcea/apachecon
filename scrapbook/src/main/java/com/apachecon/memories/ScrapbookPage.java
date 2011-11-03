@@ -34,7 +34,7 @@ public class ScrapbookPage extends WebPage {
         List<Class<? extends Page>> links = new ArrayList<Class<? extends Page>>();
         links.add(Index.class);
         links.add(Upload.class);
-        Roles roles = (AuthenticatedWebSession.get()).getRoles();
+        Roles roles = AuthenticatedWebSession.get().getRoles();
         if (roles != null && roles.hasRole("admin")) {
             links.add(Approve.class);
             links.add(Logout.class);

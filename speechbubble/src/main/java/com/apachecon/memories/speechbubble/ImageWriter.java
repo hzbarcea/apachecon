@@ -26,31 +26,32 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ImageWriter {
-	private static final Logger LOG = LoggerFactory.getLogger(ImageWriter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ImageWriter.class);
 
     private ImageWriter() {
-    	// Non-instantiable utility
+        // Non-instantiable utility
     }
 
-    public static void write(RenderedImage img, String filename, String parent, String imageFormat) throws IOException {
-    	if (img == null) {
-    		LOG.warn("Image not provided. Write aborted");
-    		return;
-    	}
-    	if (parent == null || filename == null || imageFormat == null) {
-    		LOG.warn("Target filename or Content-Type not provided. Write aborted");
-    		return;
-    	}
-		File target = new File(parent);
-		if (!target.isDirectory()) {
-			target = target.getParentFile();
-		}
-		if (!target.exists()) {
-    		LOG.warn("Target directory does not exist ({}). Write aborted", target.getAbsolutePath());
-    		return;
-		}
-    	File output = new File(target, filename + "." + imageFormat);
-    	LOG.info("Writing '{}' image to file: {}", imageFormat, output.getAbsolutePath());
-    	ImageIO.write(img, imageFormat, output);
+    public static void write(RenderedImage img, String filename, String parent, String imageFormat)
+        throws IOException {
+        if (img == null) {
+            LOG.warn("Image not provided. Write aborted");
+            return;
+        }
+        if (parent == null || filename == null || imageFormat == null) {
+            LOG.warn("Target filename or Content-Type not provided. Write aborted");
+            return;
+        }
+        File target = new File(parent);
+        if (!target.isDirectory()) {
+            target = target.getParentFile();
+        }
+        if (!target.exists()) {
+            LOG.warn("Target directory does not exist ({}). Write aborted", target.getAbsolutePath());
+            return;
+        }
+        File output = new File(target, filename + "." + imageFormat);
+        LOG.info("Writing '{}' image to file: {}", imageFormat, output.getAbsolutePath());
+        ImageIO.write(img, imageFormat, output);
     }
 }

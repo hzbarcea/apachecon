@@ -54,7 +54,7 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
         try {
             props.load(getClass().getResourceAsStream("/deploy.properties"));
         } catch (IOException e) {
-            
+
         }
         imageService = new DefaultImageService();
         imageService.setUploadDirectory(new File(props.getProperty("upload")));
@@ -66,7 +66,7 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
         factoryBean.setAddress(props.getProperty("serviceUrl"));
 
         // we know what we are doing
-        factoryBean.setFeatures((List) Arrays.asList(new LoggingFeature()));
+        factoryBean.setFeatures((List)Arrays.asList(new LoggingFeature()));
         approveService = (ApproveService)factoryBean.create();
     }
 

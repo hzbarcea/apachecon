@@ -10,7 +10,9 @@ public interface ImageService {
     void newFile(FileUpload upload) throws Exception;
 
     List<File> getAproved();
+
     List<File> getDecline();
+
     List<File> getAll();
 
 }
