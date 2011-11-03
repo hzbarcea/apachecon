@@ -1,0 +1,1 @@
+echo Generating thumbnails for uploaded image: $1
