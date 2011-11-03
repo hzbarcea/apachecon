@@ -1,0 +1,17 @@
+<wicket:panel>
+    <div class="item"
+        onmouseover="$(this).children('.editor').css('display', 'block');"
+        onmouseout="$(this).children('.editor').css('display', 'none');" >
+
+        <img wicket:id="thumb" src="uploads/halloween__s_tale_by_lunebleu-d4e3wkl_t.jpg" />
+
+        <div class="editor">
+            <div class="opaque"></div>
+            <div class="controls">
+                <a wicket:id="imageLink" class="fancy zoom" href="uploads/halloween__s_tale_by_lunebleu-d4e3wkl.jpg"></a>
+                <div class="approve" onclick="approveImage(this);">Approve</div>
+                <div class="decline" onclick="declineImage(this);">Decline</div>
+            </div>
+        </div>
+    </div>
+</wicket:panel>

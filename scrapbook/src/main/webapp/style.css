@@ -332,6 +332,7 @@ input{
 					background: transparent url(img/zoom.png) no-repeat 75px  28px;
 					width: 194px;
 					height: 100px;
+					display: block;
 					cursor: pointer;
 				}
 				#main.approval #container .item .editor .approve, #main.approval #container .item .editor .decline{
