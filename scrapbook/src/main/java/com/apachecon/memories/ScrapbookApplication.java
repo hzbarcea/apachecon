@@ -1,6 +1,6 @@
 package com.apachecon.memories;
 
-import com.apachecon.memories.service.ApprovalService;
+import com.apachecon.memories.approve.ApproveService;
 import com.apachecon.memories.service.DefaultImageService;
 import com.apachecon.memories.service.ImageService;
 import com.apachecon.memories.session.Logout;
@@ -9,8 +9,12 @@ import com.apachecon.memories.session.SignIn;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
+import org.apache.cxf.feature.LoggingFeature;
+import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.markup.html.WebPage;
@@ -24,6 +28,7 @@ import org.apache.wicket.markup.html.WebPage;
 public class ScrapbookApplication extends AuthenticatedWebApplication {
 
     private DefaultImageService imageService;
+    private ApproveService approveService;
 
     /**
      * @see org.apache.wicket.Application#getHomePage()
@@ -55,6 +60,14 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
         imageService.setUploadDirectory(new File(props.getProperty("upload")));
         imageService.setAproveDirectory(new File(props.getProperty("approve")));
         imageService.setDeclineDirectory(new File(props.getProperty("decline")));
+
+        JaxWsProxyFactoryBean factoryBean = new JaxWsProxyFactoryBean();
+        factoryBean.setServiceClass(ApproveService.class);
+        factoryBean.setAddress(props.getProperty("serviceUrl"));
+
+        // we know what we are doing
+        factoryBean.setFeatures((List) Arrays.asList(new LoggingFeature()));
+        approveService = (ApproveService)factoryBean.create();
     }
 
     @Override
@@ -71,7 +84,7 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
         return imageService;
     }
 
-    public ApprovalService getApprovalService() {
-        return null;
+    public ApproveService getApprovalService() {
+        return approveService;
     }
 }
