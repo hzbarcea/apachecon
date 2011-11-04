@@ -37,13 +37,6 @@
       <version>${wicket.version}</version>
     </dependency>
 
-    <!-- Required for thumbnails -->
-    <dependency>
-      <groupId>org.apache.wicket</groupId>
-      <artifactId>wicket-extensions</artifactId>
-      <version>${wicket.version}</version>
-    </dependency>
-
     <!-- Yes! we call web service ;) -->
     <dependency>
       <groupId>org.apache.cxf</groupId>
