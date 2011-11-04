@@ -47,7 +47,7 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
         mountPage("/index", Index.class);
         mountPackage("/signin", SignIn.class);
         mountPackage("/logout", Logout.class);
-        mountPackage("/aprove", Approve.class);
+        mountPackage("/approve", Approve.class);
         mountPackage("/upload", Upload.class);
         super.init();
 
@@ -62,7 +62,7 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
         }
         imageService = new DefaultImageService();
         imageService.setUploadDirectory(new File(props.getProperty("upload")));
-        imageService.setAproveDirectory(new File(props.getProperty("approve")));
+        imageService.setApproveDirectory(new File(props.getProperty("approve")));
         imageService.setDeclineDirectory(new File(props.getProperty("decline")));
 
         JaxWsProxyFactoryBean factoryBean = new JaxWsProxyFactoryBean();
