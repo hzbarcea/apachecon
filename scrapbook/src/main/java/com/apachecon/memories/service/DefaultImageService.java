@@ -21,7 +21,7 @@ public class DefaultImageService implements ImageService {
         }
     };
 
-    private File aproveDirectory;
+    private File approveDirectory;
     private File declineDirectory;
     private File uploadDirectory;
 
@@ -50,7 +50,7 @@ public class DefaultImageService implements ImageService {
 
     @Override
     public List<UserFile> getApproved() {
-        return list(aproveDirectory.listFiles(FILTER), true);
+        return list(approveDirectory.listFiles(FILTER), true);
     }
 
     @Override
@@ -80,8 +80,8 @@ public class DefaultImageService implements ImageService {
         return files;
     }
 
-    public void setAproveDirectory(File directory) {
-        this.aproveDirectory = directory;
+    public void setApproveDirectory(File directory) {
+        this.approveDirectory = directory;
     }
 
     public void setDeclineDirectory(File directory) {
