@@ -12,16 +12,14 @@ import com.apachecon.memories.session.SignIn;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
 
-import org.apache.cxf.feature.LoggingFeature;
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
+import org.apache.wicket.Session;
 import org.apache.wicket.authentication.strategy.NoOpAuthenticationStrategy;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.request.mapper.BufferedResponseMapper;
 
 /**
  * Application object for your web application. If you want to run this
@@ -47,12 +45,20 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
      */
     @Override
     public void init() {
-        mountPage("/index", Index.class);
-        mountPackage("/signin", SignIn.class);
-        mountPackage("/logout", Logout.class);
-        mountPackage("/approve", Approve.class);
-        mountPackage("/upload", Upload.class);
         super.init();
+
+        mountPage("/index.html", Index.class);
+        mountPage("/signin.html", SignIn.class);
+        mountPage("/logout.html", Logout.class);
+        mountPage("/browse.html", Browse.class);
+        mountPage("/aprove.html", Approve.class);
+        mountPage("/upload.html", Upload.class);
+
+        mount(new BufferedResponseMapper() {
+            protected String getSessionId() {
+                return Session.get().getId();
+            }
+        });
 
         // disable cookie with user/pass, it's not safe
         getSecuritySettings().setAuthenticationStrategy(new NoOpAuthenticationStrategy());
