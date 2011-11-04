@@ -1,7 +1,7 @@
 package com.apachecon.memories.link;
 
 import com.apachecon.memories.ScrapbookApplication;
-import com.apachecon.memories.approve.ApproveService;
+import com.apachecon.memories.service.ImageService;
 import com.apachecon.memories.service.UserFile;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -19,7 +19,7 @@ public abstract class AbstractLink extends AjaxLink<UserFile> {
 
     public final void onClick(AjaxRequestTarget target) {
         try {
-            call(ScrapbookApplication.getApprovalService());
+            call(ScrapbookApplication.getImageService());
         } catch (Exception e) {
             logger.error("Error calling web service", e);
         }
@@ -31,6 +31,6 @@ public abstract class AbstractLink extends AjaxLink<UserFile> {
         
     }
 
-    public abstract void call(ApproveService service);
+    public abstract void call(ImageService service);
 
 }

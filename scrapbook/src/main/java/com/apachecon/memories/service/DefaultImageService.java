@@ -99,4 +99,28 @@ public class DefaultImageService implements ImageService {
         this.uploadDirectory = directory;
     }
 
+    public void approve(String name) {
+        File uf = new File(uploadDirectory, name);
+        File af = new File(approveDirectory, name);
+        uf.renameTo(af);
+        
+        uf = new File(uploadDirectory, name + "_thumb");
+        af = new File(approveDirectory, name + "_thumb");
+        if (uf.exists()) {
+            uf.renameTo(af);
+        }
+    }
+
+    public void decline(String name) {
+        File uf = new File(uploadDirectory, name);
+        File af = new File(declineDirectory, name);
+        uf.renameTo(af);
+        
+        uf = new File(uploadDirectory, name + "_thumb");
+        af = new File(declineDirectory, name + "_thumb");
+        if (uf.exists()) {
+            uf.renameTo(af);
+        }
+    }
+
 }

@@ -1,7 +1,6 @@
 package com.apachecon.memories.link;
 
-import com.apachecon.memories.approve.ApproveService;
-import com.apachecon.memories.approve.DeclineRequest;
+import com.apachecon.memories.service.ImageService;
 import com.apachecon.memories.service.UserFile;
 
 public class DeclineLink extends AbstractLink {
@@ -11,10 +10,8 @@ public class DeclineLink extends AbstractLink {
     }
 
     @Override
-    public void call(ApproveService service) {
-        DeclineRequest message = new DeclineRequest();
-        message.setFileName(getModelObject().getName());
-        service.decline(message);
+    public void call(ImageService service) {
+        service.decline(getModelObject().getName());
     }
 
 }
