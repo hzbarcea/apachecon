@@ -16,6 +16,7 @@ public class DefaultImageService implements ImageService {
     private static final FilenameFilter FILTER = new FilenameFilter() {
         @Override
         public boolean accept(File dir, String name) {
+            name = name.toLowerCase();
             return name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".gif");
         }
     };
