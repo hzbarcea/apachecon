@@ -58,7 +58,7 @@
 
 
   <bean class="com.apachecon.memories.cxf.UploadService" id="jaxrsServiceBean">
-    <constructor-arg value="/tmp/upload"/>
+    <constructor-arg value="/tmp/memories"/>
   </bean>
   <jaxrs:server id="jaxrsService"
                         address="/memories">

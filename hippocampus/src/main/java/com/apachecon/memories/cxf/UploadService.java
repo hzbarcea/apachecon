@@ -55,9 +55,11 @@ public class UploadService {
     };
 
     
-    File path;
+    File uploadPath;
+    File approvePath;
     public UploadService(File p) {
-        path = p;
+        uploadPath = new File(p, "upload");
+        approvePath = new File(p, "approve");
     }
     
     
@@ -66,7 +68,7 @@ public class UploadService {
     @Produces("text/plain")
     @Path("/upload")
     public String uploadJPG(byte[] image) throws IOException {
-        File f = File.createTempFile("cxfupload", ".jpg", path);
+        File f = File.createTempFile("cxfupload", ".jpg", uploadPath);
         FileOutputStream fout = new FileOutputStream(f);
         fout.write(image);
         fout.close();
@@ -77,7 +79,7 @@ public class UploadService {
     @Produces("text/plain")
     @Path("/upload")
     public String uploadPNG(byte[] image) throws IOException {
-        File f = File.createTempFile("cxfupload", ".png", path);
+        File f = File.createTempFile("cxfupload", ".png", uploadPath);
         FileOutputStream fout = new FileOutputStream(f);
         fout.write(image);
         fout.close();
@@ -88,7 +90,7 @@ public class UploadService {
     @Produces("text/plain")
     @Path("/upload")
     public String uploadGIF(byte[] image) throws IOException {
-        File f = File.createTempFile("cxfupload", ".gif", path);
+        File f = File.createTempFile("cxfupload", ".gif", uploadPath);
         FileOutputStream fout = new FileOutputStream(f);
         fout.write(image);
         fout.close();
@@ -99,19 +101,36 @@ public class UploadService {
     @Path("/uploads")
     @Produces({"text/xml", "application/json"})
     public ImageList listUploadedImages() {
-        return new ImageList(path.list(FILTER));
+        return new ImageList(uploadPath.list(FILTER));
     }
 
     @GET
     @Path("/uploads/{img}")
     @Produces({"image/jpg", "image/png", "image/gif"})
-    public Response getImage(@PathParam("img") String name) throws FileNotFoundException, IOException {
-        File f = new File(path, name);
+    public Response getUploadedImage(@PathParam("img") String name) throws FileNotFoundException, IOException {
+        File f = new File(uploadPath, name);
         byte bytes[] = IOUtils.readBytesFromStream(new FileInputStream(f));
         int idx = name.lastIndexOf('.');
         return Response.ok(bytes, "image/" + name.substring(idx + 1)).build();
     }
 
+    @GET
+    @Path("/approved")
+    @Produces({"text/xml", "application/json"})
+    public ImageList listApprovedImages() {
+        return new ImageList(approvePath.list(FILTER));
+    }
+
+    @GET
+    @Path("/approved/{img}")
+    @Produces({"image/jpg", "image/png", "image/gif"})
+    public Response getApprovedImage(@PathParam("img") String name) throws FileNotFoundException, IOException {
+        File f = new File(approvePath, name);
+        byte bytes[] = IOUtils.readBytesFromStream(new FileInputStream(f));
+        int idx = name.lastIndexOf('.');
+        return Response.ok(bytes, "image/" + name.substring(idx + 1)).build();
+    }
+    
     @XmlRootElement(name = "images")
     static class ImageList {
         @XmlElement(name = "image")
@@ -128,7 +147,7 @@ public class UploadService {
     public static void main(String args[]) {
         JAXRSServerFactoryBean f = new JAXRSServerFactoryBean();
         f.setAddress("http://localhost:9000/memories");
-        f.setResourceProvider(new SingletonResourceProvider(new UploadService(new File("/tmp/upload"))));
+        f.setResourceProvider(new SingletonResourceProvider(new UploadService(new File("/tmp/memories"))));
         f.create();
     }
     

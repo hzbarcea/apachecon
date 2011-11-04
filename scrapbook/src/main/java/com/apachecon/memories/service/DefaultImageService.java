@@ -88,15 +88,18 @@ public class DefaultImageService implements ImageService {
     }
 
     public void setApproveDirectory(File directory) {
-        this.approveDirectory = directory;
+        approveDirectory = directory;
+        approveDirectory.mkdirs();
     }
 
     public void setDeclineDirectory(File directory) {
-        this.declineDirectory = directory;
+        declineDirectory = directory;
+        declineDirectory.mkdirs();
     }
 
     public void setUploadDirectory(File directory) {
-        this.uploadDirectory = directory;
+        uploadDirectory = directory;
+        uploadDirectory.mkdirs();
     }
 
     public void approve(String name) {

@@ -46,7 +46,7 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
         mountPage("/signin.html", SignIn.class);
         mountPage("/logout.html", Logout.class);
         mountPage("/browse.html", Browse.class);
-        mountPage("/aprove.html", Approve.class);
+        mountPage("/approve.html", Approve.class);
         mountPage("/upload.html", Upload.class);
 
         mount(new BufferedResponseMapper() {
@@ -64,10 +64,14 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
         } catch (IOException e) {
 
         }
+        File rootDirectory = new File(props.getProperty("data.dir"));
+        rootDirectory.mkdirs();
+        
         imageService = new DefaultImageService();
-        imageService.setUploadDirectory(new File(props.getProperty("upload")));
-        imageService.setApproveDirectory(new File(props.getProperty("approve")));
-        imageService.setDeclineDirectory(new File(props.getProperty("decline")));
+        
+        imageService.setUploadDirectory(new File(rootDirectory, "upload"));
+        imageService.setApproveDirectory(new File(rootDirectory, "approve"));
+        imageService.setDeclineDirectory(new File(rootDirectory, "decline"));
     }
 
     @Override
