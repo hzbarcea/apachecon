@@ -29,13 +29,11 @@ public class MosaicExecTest extends CamelSpringTestSupport {
 
     @Test
     public void testMosaic() throws Exception {
-        template.sendBody("{{schedule.generate.thumbnails}}", "Hello world");
+        template.sendBody("{{schedule.generate}}", "Hello world");
 /*
     	MockEndpoint mock = (MockEndpoint)context.getEndpoint("mock:result");
         mock.expectedMinimumMessageCount(1);
         mock.assertIsSatisfied();
 */
-        // assertTrue(mock.assertExchangeReceived(0).getIn().getBody() instanceof Tweet);
-        // s = mock.assertExchangeReceived(0).getIn().getBody(Search.class);
     }
 }

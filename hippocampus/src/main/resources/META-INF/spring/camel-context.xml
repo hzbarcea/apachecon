@@ -26,19 +26,32 @@
        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
        http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
 
-  <!-- This creates an embedded ActiveMQ Broker -->
-  <broker xmlns="http://activemq.apache.org/schema/core" useJmx="false" persistent="false">
-    <transportConnectors>
-      <transportConnector uri="tcp://localhost:61616" />
-    </transportConnectors>
-  </broker>
-
-  <!-- Lets connect the Camel ActiveMQ component to the embedded broker.
-       See http://camel.apache.org/activemq.html for more information.
-  -->
-  <bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
-    <property name="brokerURL" value="failover:tcp://localhost:61616"/>
+  <!-- Create an embedded ActiveMQ Broker -->
+  <bean id="jmsConnectionFactory" 
+    class="org.apache.activemq.ActiveMQConnectionFactory">
+    <property name="brokerURL" value="tcp://localhost:61616" />
   </bean>
+
+  <bean id="pooledConnectionFactory" 
+    class="org.apache.activemq.pool.PooledConnectionFactory">
+    <property name="maxConnections" value="8" />
+    <property name="maximumActive" value="500" />
+    <property name="connectionFactory" ref="jmsConnectionFactory" />
+  </bean>
+
+  <bean id="jmsConfig" 
+    class="org.apache.camel.component.jms.JmsConfiguration">
+    <property name="connectionFactory" ref="pooledConnectionFactory"/>
+    <property name="transacted" value="false"/>
+    <property name="concurrentConsumers" value="10"/>
+  </bean>
+
+  <amq:broker id="broker" useJmx="true" persistent="false" brokerName="activemq" useShutdownHook="false">
+    <amq:transportConnectors>
+      <amq:transportConnector name="openwire" uri="tcp://localhost:61616" />
+    </amq:transportConnectors>
+  </amq:broker>
+
 
   <bean id="properties" class="org.apache.camel.component.properties.PropertiesComponent">
     <property name="location" value="classpath:memories-test.properties"/>
@@ -69,7 +82,7 @@
       <to uri="bean:foobar" />
       <split>
         <method bean="twitterSearch" method="tweets" />
-        <to uri="activemq:memories.tweets" />
+        <to uri="jms:memories.tweets" />
       </split>
       <choice>
         <when>
@@ -83,7 +96,7 @@
     </route>
 
     <route>
-      <from uri="activemq:memories.tweets" />
+      <from uri="jms:memories.tweets" />
       <to uri="log:TWEET" />
       <setHeader headerName="CamelFileName"><simple>${body.id_str}</simple></setHeader>
       <setHeader headerName="CamelFileParent"><constant>/x1/apachecon/tmp</constant></setHeader>
@@ -96,9 +109,9 @@
     </route>
 
     <route>
-      <from uri="{{schedule.generate.thumbnails}}" />
-      <setHeader headerName="CamelExecCommandArgs"><constant>foobar</constant></setHeader>
-      <to uri="exec:{{script.generate.thumbnails}}" />
+      <from uri="{{schedule.generate}}" />
+      <setHeader headerName="CamelExecCommandArgs"><constant>foo bar</constant></setHeader>
+      <to uri="exec:{{script.generate}}" />
     </route>
       
   </camelContext>

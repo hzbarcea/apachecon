@@ -47,7 +47,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-camel</artifactId>
+      <artifactId>activemq-pool</artifactId>
     </dependency>
 
     <dependency>
