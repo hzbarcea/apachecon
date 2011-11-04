@@ -22,10 +22,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MailWithAttachments implements Processor {
-	private static final Logger LOG = LoggerFactory.getLogger(MailWithAttachments.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MailWithAttachments.class);
 
-	@Override
-	public void process(Exchange ex) throws Exception {
-		LOG.info("ATTACHMENTS: " + ex.getIn().getBody().getClass());
-	}
+    @Override
+    public void process(Exchange ex) throws Exception {
+        LOG.info("ATTACHMENTS: " + ex.getIn().getBody().getClass());
+    }
 }

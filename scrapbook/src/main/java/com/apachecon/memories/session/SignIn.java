@@ -13,7 +13,7 @@ public class SignIn extends ScrapbookPage {
     private static final long serialVersionUID = -3618677566671723851L;
 
     public SignIn() {
-        add(new SignInPanel("signIn", true));
+        add(new SignInPanel("signIn", false));
     }
 
 }

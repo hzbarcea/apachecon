@@ -25,11 +25,9 @@ import org.apache.camel.Message;
 import org.apache.camel.Producer;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.junit4.CamelSpringTestSupport;
-
 import org.junit.Test;
 import org.jvnet.mock_javamail.Mailbox;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
 
 public class MailConnectionTest extends CamelSpringTestSupport {
 
@@ -43,12 +41,14 @@ public class MailConnectionTest extends CamelSpringTestSupport {
 
         Endpoint endpoint = context.getEndpoint("{{mbox.smtp}}");
         assertNotNull(endpoint);
-        
+
         Exchange ex1 = endpoint.createExchange();
         Message in = ex1.getIn();
         in.setBody("Hello World");
-        in.addAttachment("feather-small.gif", new DataHandler(new FileDataSource("src/test/resources/img/feather-small.gif")));
-        in.addAttachment("talend-logo", new DataHandler(new FileDataSource("src/test/resources/img/talend-logo.jpg")));
+        in.addAttachment("feather-small.gif",
+                         new DataHandler(new FileDataSource("src/test/resources/img/feather-small.gif")));
+        in.addAttachment("talend-logo",
+                         new DataHandler(new FileDataSource("src/test/resources/img/talend-logo.jpg")));
 
         Exchange ex2 = endpoint.createExchange();
         ex2.getIn().setBody("Bye World... without attachments");
@@ -62,8 +62,8 @@ public class MailConnectionTest extends CamelSpringTestSupport {
 
         Endpoint target = context.getEndpoint("{{mail.target}}");
         if (target instanceof MockEndpoint) {
-        	MockEndpoint mock = (MockEndpoint)target;
-        	
+            MockEndpoint mock = (MockEndpoint)target;
+
             mock.expectedMessageCount(2);
             mock.assertIsSatisfied();
 

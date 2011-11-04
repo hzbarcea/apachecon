@@ -2,9 +2,9 @@ package com.apachecon.memories.service;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -12,6 +12,13 @@ import java.util.UUID;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 
 public class DefaultImageService implements ImageService {
+
+    private static final FilenameFilter FILTER = new FilenameFilter() {
+        @Override
+        public boolean accept(File dir, String name) {
+            return name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".gif");
+        }
+    };
 
     private File aproveDirectory;
     private File declineDirectory;
@@ -36,28 +43,39 @@ public class DefaultImageService implements ImageService {
     }
 
     @Override
-    public List<File> getAproved() {
-        return list(aproveDirectory.listFiles());
+    public List<UserFile> getUploaded() {
+        return list(uploadDirectory.listFiles(FILTER), null);
     }
 
     @Override
-    public List<File> getDecline() {
-        return list(declineDirectory.listFiles());
+    public List<UserFile> getApproved() {
+        return list(aproveDirectory.listFiles(FILTER), true);
     }
 
-    private List<File> list(File[] listFiles) {
+    @Override
+    public List<UserFile> getDeclined() {
+        return list(declineDirectory.listFiles(FILTER), false);
+    }
+
+    private List<UserFile> list(File[] listFiles, Boolean approved) {
         if (listFiles == null) {
             return Collections.emptyList();
         }
-        return Arrays.asList(listFiles);
+
+        List<UserFile> files = new ArrayList<UserFile>();
+        for (File file : listFiles) {
+            files.add(new UserFile(file, approved));
+        }
+        return files;
     }
 
     @Override
-    public List<File> getAll() {
-        List<File> files = new ArrayList<File>();
-        files.addAll(getAproved());
-        files.addAll(getDecline());
-        Collections.shuffle(files);
+    public List<UserFile> getAll() {
+        List<UserFile> files = new ArrayList<UserFile>();
+        files.addAll(getUploaded());
+        files.addAll(getApproved());
+        files.addAll(getDeclined());
+        //Collections.shuffle(files);
         return files;
     }
 

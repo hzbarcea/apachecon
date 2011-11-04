@@ -15,6 +15,7 @@ import java.util.Properties;
 
 import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
+import org.apache.wicket.authentication.strategy.NoOpAuthenticationStrategy;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.markup.html.WebPage;
@@ -27,8 +28,8 @@ import org.apache.wicket.markup.html.WebPage;
  */
 public class ScrapbookApplication extends AuthenticatedWebApplication {
 
-    private DefaultImageService imageService;
-    private ApproveService approveService;
+    private static DefaultImageService imageService;
+    private static ApproveService approveService;
 
     /**
      * @see org.apache.wicket.Application#getHomePage()
@@ -50,11 +51,14 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
         mountPackage("/upload", Upload.class);
         super.init();
 
+        // disable cookie with user/pass, it's not safe
+        getSecuritySettings().setAuthenticationStrategy(new NoOpAuthenticationStrategy());
+
         Properties props = new Properties();
         try {
             props.load(getClass().getResourceAsStream("/deploy.properties"));
         } catch (IOException e) {
-            
+
         }
         imageService = new DefaultImageService();
         imageService.setUploadDirectory(new File(props.getProperty("upload")));
@@ -66,7 +70,7 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
         factoryBean.setAddress(props.getProperty("serviceUrl"));
 
         // we know what we are doing
-        factoryBean.setFeatures((List) Arrays.asList(new LoggingFeature()));
+        factoryBean.setFeatures((List)Arrays.asList(new LoggingFeature()));
         approveService = (ApproveService)factoryBean.create();
     }
 
@@ -80,11 +84,11 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
         return MemoriesWebSession.class;
     }
 
-    public ImageService getImageService() {
+    public static ImageService getImageService() {
         return imageService;
     }
 
-    public ApproveService getApprovalService() {
+    public static ApproveService getApprovalService() {
         return approveService;
     }
 }

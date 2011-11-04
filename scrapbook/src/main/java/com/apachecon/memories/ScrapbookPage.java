@@ -34,11 +34,12 @@ public class ScrapbookPage extends WebPage {
         List<Class<? extends Page>> links = new ArrayList<Class<? extends Page>>();
         links.add(Index.class);
         links.add(Upload.class);
-        Roles roles = (AuthenticatedWebSession.get()).getRoles();
+        Roles roles = AuthenticatedWebSession.get().getRoles();
         if (roles != null && roles.hasRole("admin")) {
             links.add(Approve.class);
             links.add(Logout.class);
         } else {
+            links.add(Browse.class);
             links.add(SignIn.class);
         }
 
@@ -47,11 +48,13 @@ public class ScrapbookPage extends WebPage {
             protected void populateItem(ListItem<Class> item) {
                 BookmarkablePageLink link = new BookmarkablePageLink("link", item.getModelObject());
 
-                if (item.getPage().getClass().equals(item.getModelObject())) {
-                    link.add(AttributeModifier.append("class", "active"));
+                String simpleName = item.getModelObject().getSimpleName();
+
+                if (getPage().getClass().equals(item.getModelObject())) {
+                    item.add(AttributeModifier.append("class", "active"));
                 }
 
-                link.add(new Label("label", item.getModelObject().getSimpleName())); // TODO
+                link.add(new Label("label", simpleName));
                 item.add(link);
             }
         });

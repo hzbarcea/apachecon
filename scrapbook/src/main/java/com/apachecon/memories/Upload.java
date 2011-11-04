@@ -1,5 +1,6 @@
 package com.apachecon.memories;
 
+import com.apachecon.memories.model.ApprovedModel;
 import com.apachecon.memories.service.ImageService;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.MultiFileUploadField;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Bytes;
@@ -21,20 +23,16 @@ import org.apache.wicket.util.lang.Bytes;
  */
 public class Upload extends ScrapbookPage {
 
-    private static final long serialVersionUID = 973033955774985294L;
-
     private MultiFileUploadField uploadField;
 
     private String[] contentTypes = new String[] {"image/jpeg", "image/jpg", "image/png", "image/gif"};
 
-    private transient ImageService imageService;
-
     public Upload() {
-        imageService = ((ScrapbookApplication) getApplication()).getImageService();
-
         add(new FeedbackPanel("feedback"));
 
-        add(new Thumbs("thumbs", 12, 4, imageService.getAproved()));
+        ApprovedModel model = new ApprovedModel();
+        add(new Thumbs("thumbs", 12, 4, model));
+        add(new BookmarkablePageLink("browse", Browse.class));
 
         Form<Void> form = new Form<Void>("uploadForm") {
             {
@@ -51,7 +49,7 @@ public class Upload extends ScrapbookPage {
                         Upload.this.warn("File " + upload.getClientFileName() + " is not supported. Only images can be shared");
                     } else {
                         try {
-                            imageService.newFile(upload);
+                            ScrapbookApplication.getImageService().newFile(upload);
 
                             Upload.this.info("File " + upload.getClientFileName() + " has been uploaded and now it waiting for approval");
                         } catch (Exception e) {
@@ -63,8 +61,8 @@ public class Upload extends ScrapbookPage {
             }
         };
 
-        Model<ArrayList<FileUpload>> model = new Model<ArrayList<FileUpload>>(new ArrayList<FileUpload>());
-        uploadField = new MultiFileUploadField("uploadField", model);
+        Model<ArrayList<FileUpload>> uploadModel = new Model<ArrayList<FileUpload>>(new ArrayList<FileUpload>());
+        uploadField = new MultiFileUploadField("uploadField", uploadModel);
         form.add(uploadField);
         form.add(new SubmitLink("submit"));
         add(form);
