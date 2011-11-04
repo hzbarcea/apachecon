@@ -7,21 +7,12 @@
 
             <div wicket:id="frames" class="frame">
 
-			    <div wicket:id="items" class="item"
-			        onmouseover="$(this).children('.editor').css('display', 'block');"
-			        onmouseout="$(this).children('.editor').css('display', 'none');" >
-			
-			        <img wicket:id="thumb" src="uploads/halloween__s_tale_by_lunebleu-d4e3wkl_t.jpg" />
-			
-			        <div class="editor">
-			            <div class="opaque"></div>
-			            <div class="controls">
-			                <a wicket:id="imageLink" class="fancy zoom" href="uploads/halloween__s_tale_by_lunebleu-d4e3wkl.jpg"></a>
-			                <a wicket:id="approve" class="approve">Approve</a>
-			                <a wicket:id="decline" class="decline">Decline</a>
-			            </div>
-			        </div>
-			    </div>
+                <div wicket:id="items" class="item">
+
+                    <img wicket:id="thumb" src="uploads/halloween__s_tale_by_lunebleu-d4e3wkl_t.jpg" />
+
+                    <wicket:child />
+                </div>
             </div>
 
         </div>

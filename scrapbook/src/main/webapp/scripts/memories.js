@@ -4,10 +4,18 @@ $(function() {
 	$("#container").scrollable();
 	
 	// initialize fancybox
-	$("a.fancy").fancybox();
+	$("a.fancy").fancybox({'type': 'image'});
 
+
+    $('.browsable .item').mouseover(function() {
+        $(this).children('.editor').css('display', 'block');
+    });
+    $('.browsable .item').mouseout(function() {
+        $(this).children('.editor').css('display', 'none');
+    });
 });
 
+/* not used
 function uploadImages(){
 
 	//get the input and UL list
@@ -66,3 +74,4 @@ function approveImage(el){
 	
 	// Do some ajax here to approve image on server
 }
+//*/

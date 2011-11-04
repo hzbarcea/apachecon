@@ -28,8 +28,8 @@ import org.apache.wicket.markup.html.WebPage;
  */
 public class ScrapbookApplication extends AuthenticatedWebApplication {
 
-    private DefaultImageService imageService;
-    private ApproveService approveService;
+    private static DefaultImageService imageService;
+    private static ApproveService approveService;
 
     /**
      * @see org.apache.wicket.Application#getHomePage()
@@ -84,11 +84,11 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
         return MemoriesWebSession.class;
     }
 
-    public ImageService getImageService() {
+    public static ImageService getImageService() {
         return imageService;
     }
 
-    public ApproveService getApprovalService() {
+    public static ApproveService getApprovalService() {
         return approveService;
     }
 }

@@ -1,22 +1,21 @@
-package com.apachecon.memories;
+package com.apachecon.memories.link;
 
-import java.io.File;
+import com.apachecon.memories.service.UserFile;
+
 import java.io.FileInputStream;
 import java.io.InputStream;
 
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 
-public class ImageLink extends Link<Void> {
+public class ImageLink extends Link<UserFile> {
 
-    private final File file;
-
-    public ImageLink(String id, File file) {
-        super(id);
-        this.file = file;
+    public ImageLink(String id, UserFile model) {
+        super(id, Model.of(model));
     }
 
     public void onClick() {
@@ -25,17 +24,17 @@ public class ImageLink extends Link<Void> {
             @Override
             public void respond(IRequestCycle requestCycle) {
                 WebResponse response = (WebResponse)requestCycle.getResponse();
-                String name = file.getName();
-                response.setContentType("image/" + name.substring(name.lastIndexOf('.') + 1));
+                response.setContentType(getModelObject().getContentType());
 
                 try {
-                    InputStream is = new FileInputStream(file);
+                    InputStream is = getModelObject().getInputStream();
 
                     byte[] buffer = new byte[512];
                     int length = 0;
                     while ((length = is.read(buffer)) > 0) {
                         response.write(buffer, 0, length);
                     }
+                    response.flush();
 
                     is.close();
                 } catch (Exception e) {

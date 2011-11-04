@@ -258,33 +258,33 @@ input{
 		}
 
 
-/* APPROVAL
+/* APPROVAL / browsable
  --------------------------- */
-#main.approval{	
+.browsable {
 }
-	#main.approval #slider{
+	.browsable #slider{
 		margin-top: 10px;
 	}
-	#main.approval #slider .prev, #main.approval #slider .next{
+	.browsable #slider .prev, .browsable #slider .next{
 		width: 31px;
 		height: 160px;
 		margin-top: 170px;
 		float: left;
 		cursor: pointer;
 	}
-	#main.approval #slider .prev{
+	.browsable #slider .prev{
 		background: transparent url(img/prev_page.png) no-repeat;
 	}
-	#main.approval #slider .prev.disabled{
+	.browsable #slider .prev.disabled{
 		background: transparent url(img/prev_page_d.png) no-repeat;
 	}
-	#main.approval #slider .next{
+	.browsable #slider .next{
 		background: transparent url(img/next_page.png) no-repeat;
 	}
-	#main.approval #slider .next.disabled{
+	.browsable #slider .next.disabled{
 		background: transparent url(img/next_page_d.png) no-repeat;
 	}
-	#main.approval #container{
+	.browsable #container{
 		float: left;
 		width: 880px;
 		height: 483px;
@@ -292,28 +292,28 @@ input{
 		position: relative;
 		overflow: hidden;
 	}
-	#main.approval #container .frames {
+	.browsable #container .frames {
 		/* this cannot be too large */
 		width:20000em;
 		position:absolute;
 	}
-	#main.approval #container .frame {
+	.browsable #container .frame {
 		float: left;
 		width: 880px;
 	}
-	#main.approval #container .item{
+	.browsable #container .item{
 		float: left;
 		margin: 15px 32px 15px 0;
 		position: relative;
 	}
-		#main.approval #container .item .editor{
+		.browsable #container .item .editor{
 			display: none;
 			position: absolute;
 			top: 1px;
 			left: 1px;
 			z-index: 10;
 		}		
-			#main.approval #container .item .editor .opaque{
+			.browsable #container .item .editor .opaque{
 				background: #ffffff;
 				
 				width: 194px;
@@ -324,18 +324,18 @@ input{
 				filter:alpha(opacity: 70);
 				opacity: 0.7;
 			}
-			#main.approval #container .item .editor .controls{
+			.browsable #container .item .editor .controls{
 				position: absolute;
 				z-index: 100;
 			}
-				#main.approval #container .item .editor .zoom{
+				.browsable #container .item .editor .zoom{
 					background: transparent url(img/zoom.png) no-repeat 75px  28px;
 					width: 194px;
 					height: 100px;
 					display: block;
 					cursor: pointer;
 				}
-				#main.approval #container .item .editor .approve, #main.approval #container .item .editor .decline{
+				.browsable #container .item .editor .approve, .browsable #container .item .editor .decline{
 					color: #701141;
 					float: left;
 					font-weight: bold;
@@ -343,14 +343,14 @@ input{
 					padding-left: 20px;
 					margin-left: 20px;
 				}
-				#main.approval #container .item .editor .approve{
+				.browsable #container .item .editor .approve{
 					background: transparent url(img/approve.png) no-repeat;
 				}
-				#main.approval #container .item .editor .decline{
+				.browsable #container .item .editor .decline{
 					background: transparent url(img/decline.png) no-repeat;
 				}
 
-		#main.approval #container .item .declined{
+		.browsable #container .item .declined{
 			background: #ffffff url(img/declined.png) no-repeat 2px 15px;
 			width: 185px;
 			height: 120px;
@@ -363,7 +363,7 @@ input{
 				opacity: 0.7;
 		}
 		
-		#main.approval #container .item .approved{
+		.browsable #container .item .approved{
 			background: transparent url(img/checkmark.png) no-repeat;
 			width: 26px;
 			height: 26px;
@@ -372,6 +372,6 @@ input{
 			right: 10px;
 			z-index: 5;
 		}
-	#main.approval #container .item.last{
+	.browsable #container .item.last{
 		margin-right: 0;
 	}
