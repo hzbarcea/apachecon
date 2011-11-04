@@ -8,10 +8,10 @@ $(function() {
 
 
     $('.browsable .item').mouseover(function() {
-        $(this).children('.editor').css('display', 'block');
+        $(this).find('.editor').css('display', 'block');
     });
     $('.browsable .item').mouseout(function() {
-        $(this).children('.editor').css('display', 'none');
+        $(this).find('.editor').css('display', 'none');
     });
 });
 
