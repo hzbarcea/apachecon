@@ -1,6 +1,9 @@
 package com.apachecon.memories;
 
+import com.apachecon.memories.approve.ApproveRequest;
 import com.apachecon.memories.approve.ApproveService;
+import com.apachecon.memories.approve.DeclineRequest;
+import com.apachecon.memories.approve.Response;
 import com.apachecon.memories.service.DefaultImageService;
 import com.apachecon.memories.service.ImageService;
 import com.apachecon.memories.session.Logout;
@@ -54,7 +57,7 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
         // disable cookie with user/pass, it's not safe
         getSecuritySettings().setAuthenticationStrategy(new NoOpAuthenticationStrategy());
 
-        Properties props = new Properties();
+        final Properties props = new Properties();
         try {
             props.load(getClass().getResourceAsStream("/deploy.properties"));
         } catch (IOException e) {
@@ -65,6 +68,7 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
         imageService.setApproveDirectory(new File(props.getProperty("approve")));
         imageService.setDeclineDirectory(new File(props.getProperty("decline")));
 
+        /*
         JaxWsProxyFactoryBean factoryBean = new JaxWsProxyFactoryBean();
         factoryBean.setServiceClass(ApproveService.class);
         factoryBean.setAddress(props.getProperty("serviceUrl"));
@@ -72,6 +76,27 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
         // we know what we are doing
         factoryBean.setFeatures((List)Arrays.asList(new LoggingFeature()));
         approveService = (ApproveService)factoryBean.create();
+        */
+        approveService = new ApproveService() {
+            public Response approve(ApproveRequest message) {
+                File udir = new File(props.getProperty("upload"));
+                File adir = new File(props.getProperty("approve"));
+                File uf = new File(udir, message.getFileName());
+                File af = new File(adir, message.getFileName());
+                uf.renameTo(af);
+                return new Response();
+            }
+
+            public Response decline(DeclineRequest message) {
+                File udir = new File(props.getProperty("upload"));
+                File adir = new File(props.getProperty("decline"));
+                File uf = new File(udir, message.getFileName());
+                File af = new File(adir, message.getFileName());
+                uf.renameTo(af);
+                return new Response();
+            }
+            
+        };
     }
 
     @Override
