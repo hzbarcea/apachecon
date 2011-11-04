@@ -1,9 +1,5 @@
 package com.apachecon.memories;
 
-import com.apachecon.memories.approve.ApproveRequest;
-import com.apachecon.memories.approve.ApproveService;
-import com.apachecon.memories.approve.DeclineRequest;
-import com.apachecon.memories.approve.Response;
 import com.apachecon.memories.service.DefaultImageService;
 import com.apachecon.memories.service.ImageService;
 import com.apachecon.memories.session.Logout;
@@ -30,7 +26,6 @@ import org.apache.wicket.request.mapper.BufferedResponseMapper;
 public class ScrapbookApplication extends AuthenticatedWebApplication {
 
     private static DefaultImageService imageService;
-    private static ApproveService approveService;
 
     /**
      * @see org.apache.wicket.Application#getHomePage()
@@ -51,7 +46,7 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
         mountPage("/signin.html", SignIn.class);
         mountPage("/logout.html", Logout.class);
         mountPage("/browse.html", Browse.class);
-        mountPage("/aprove.html", Approve.class);
+        mountPage("/approve.html", Approve.class);
         mountPage("/upload.html", Upload.class);
 
         mount(new BufferedResponseMapper() {
@@ -69,51 +64,14 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
         } catch (IOException e) {
 
         }
+        File rootDirectory = new File(props.getProperty("data.dir"));
+        rootDirectory.mkdirs();
+        
         imageService = new DefaultImageService();
-        imageService.setUploadDirectory(new File(props.getProperty("upload")));
-        imageService.setApproveDirectory(new File(props.getProperty("approve")));
-        imageService.setDeclineDirectory(new File(props.getProperty("decline")));
-
-        /*
-        JaxWsProxyFactoryBean factoryBean = new JaxWsProxyFactoryBean();
-        factoryBean.setServiceClass(ApproveService.class);
-        factoryBean.setAddress(props.getProperty("serviceUrl"));
-
-        // we know what we are doing
-        factoryBean.setFeatures((List)Arrays.asList(new LoggingFeature()));
-        approveService = (ApproveService)factoryBean.create();
-        */
-        approveService = new ApproveService() {
-            public Response approve(ApproveRequest message) {
-                File udir = new File(props.getProperty("upload"));
-                File adir = new File(props.getProperty("approve"));
-                File uf = new File(udir, message.getFileName());
-                File af = new File(adir, message.getFileName());
-                uf.renameTo(af);
-                uf = new File(udir, message.getFileName() + "_thumb");
-                af = new File(adir, message.getFileName() + "_thumb");
-                if (uf.exists()) {
-                    uf.renameTo(af);
-                }
-                return new Response();
-            }
-
-            public Response decline(DeclineRequest message) {
-                File udir = new File(props.getProperty("upload"));
-                File adir = new File(props.getProperty("decline"));
-                File uf = new File(udir, message.getFileName());
-                File af = new File(adir, message.getFileName());
-                uf.renameTo(af);
-
-                uf = new File(udir, message.getFileName() + "_thumb");
-                af = new File(adir, message.getFileName() + "_thumb");
-                if (uf.exists()) {
-                    uf.renameTo(af);
-                }
-                return new Response();
-            }
-            
-        };
+        
+        imageService.setUploadDirectory(new File(rootDirectory, "upload"));
+        imageService.setApproveDirectory(new File(rootDirectory, "approve"));
+        imageService.setDeclineDirectory(new File(rootDirectory, "decline"));
     }
 
     @Override
@@ -128,9 +86,5 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
 
     public static ImageService getImageService() {
         return imageService;
-    }
-
-    public static ApproveService getApprovalService() {
-        return approveService;
     }
 }

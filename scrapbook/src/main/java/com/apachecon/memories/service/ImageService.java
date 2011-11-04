@@ -16,4 +16,7 @@ public interface ImageService {
 
     List<UserFile> getAll();
 
+    
+    void approve(String name);
+    void decline(String name);
 }
