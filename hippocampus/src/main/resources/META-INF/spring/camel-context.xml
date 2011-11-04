@@ -131,7 +131,7 @@
 
     <route>
       <from uri="{{schedule.generate}}" />
-      <setHeader headerName="CamelExecCommandArgs"><constant>foo bar</constant></setHeader>
+      <setHeader headerName="CamelExecCommandArgs"><constant>hadrian</constant></setHeader>
       <to uri="exec:{{script.generate}}" />
     </route>
       
