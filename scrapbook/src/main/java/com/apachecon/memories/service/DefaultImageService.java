@@ -1,6 +1,12 @@
 package com.apachecon.memories.service;
 
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.InputStream;
@@ -8,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+
+import javax.imageio.ImageIO;
 
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 
@@ -38,9 +46,8 @@ public class DefaultImageService implements ImageService {
         while ((length = is.read(buffer)) > 0) {
             os.write(buffer, 0, length);
         }
-
-        is.close();
         os.close();
+        is.close();
     }
 
     @Override

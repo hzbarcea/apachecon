@@ -84,6 +84,11 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
                 File uf = new File(udir, message.getFileName());
                 File af = new File(adir, message.getFileName());
                 uf.renameTo(af);
+                uf = new File(udir, message.getFileName() + "_thumb");
+                af = new File(adir, message.getFileName() + "_thumb");
+                if (uf.exists()) {
+                    uf.renameTo(af);
+                }
                 return new Response();
             }
 
@@ -93,6 +98,12 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
                 File uf = new File(udir, message.getFileName());
                 File af = new File(adir, message.getFileName());
                 uf.renameTo(af);
+
+                uf = new File(udir, message.getFileName() + "_thumb");
+                af = new File(adir, message.getFileName() + "_thumb");
+                if (uf.exists()) {
+                    uf.renameTo(af);
+                }
                 return new Response();
             }
             
