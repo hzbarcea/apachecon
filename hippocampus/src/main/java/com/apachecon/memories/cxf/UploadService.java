@@ -32,6 +32,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -71,6 +72,28 @@ public class UploadService {
         fout.close();
         return f.getName();
     }
+    @POST
+    @Consumes("image/png")
+    @Produces("text/plain")
+    @Path("/upload")
+    public String uploadPNG(byte[] image) throws IOException {
+        File f = File.createTempFile("cxfupload", ".png", path);
+        FileOutputStream fout = new FileOutputStream(f);
+        fout.write(image);
+        fout.close();
+        return f.getName();
+    }
+    @POST
+    @Consumes("image/gif")
+    @Produces("text/plain")
+    @Path("/upload")
+    public String uploadGIF(byte[] image) throws IOException {
+        File f = File.createTempFile("cxfupload", ".gif", path);
+        FileOutputStream fout = new FileOutputStream(f);
+        fout.write(image);
+        fout.close();
+        return f.getName();
+    }
     
     @GET
     @Path("/uploads")
@@ -81,10 +104,12 @@ public class UploadService {
 
     @GET
     @Path("/uploads/{img}")
-    @Produces("image/jpg")
-    public byte[] getImage(@PathParam("img") String name) throws FileNotFoundException, IOException {
+    @Produces({"image/jpg", "image/png", "image/gif"})
+    public Response getImage(@PathParam("img") String name) throws FileNotFoundException, IOException {
         File f = new File(path, name);
-        return IOUtils.readBytesFromStream(new FileInputStream(f));
+        byte bytes[] = IOUtils.readBytesFromStream(new FileInputStream(f));
+        int idx = name.lastIndexOf('.');
+        return Response.ok(bytes, "image/" + name.substring(idx + 1)).build();
     }
 
     @XmlRootElement(name = "images")
