@@ -1,6 +1,9 @@
 package com.apachecon.memories;
 
+import com.apachecon.memories.approve.ApproveRequest;
 import com.apachecon.memories.approve.ApproveService;
+import com.apachecon.memories.approve.DeclineRequest;
+import com.apachecon.memories.approve.Response;
 import com.apachecon.memories.service.DefaultImageService;
 import com.apachecon.memories.service.ImageService;
 import com.apachecon.memories.session.Logout;
@@ -9,12 +12,8 @@ import com.apachecon.memories.session.SignIn;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
 
-import org.apache.cxf.feature.LoggingFeature;
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.wicket.Session;
 import org.apache.wicket.authentication.strategy.NoOpAuthenticationStrategy;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
@@ -64,7 +63,7 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
         // disable cookie with user/pass, it's not safe
         getSecuritySettings().setAuthenticationStrategy(new NoOpAuthenticationStrategy());
 
-        Properties props = new Properties();
+        final Properties props = new Properties();
         try {
             props.load(getClass().getResourceAsStream("/deploy.properties"));
         } catch (IOException e) {
@@ -72,9 +71,10 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
         }
         imageService = new DefaultImageService();
         imageService.setUploadDirectory(new File(props.getProperty("upload")));
-        imageService.setAproveDirectory(new File(props.getProperty("approve")));
+        imageService.setApproveDirectory(new File(props.getProperty("approve")));
         imageService.setDeclineDirectory(new File(props.getProperty("decline")));
 
+        /*
         JaxWsProxyFactoryBean factoryBean = new JaxWsProxyFactoryBean();
         factoryBean.setServiceClass(ApproveService.class);
         factoryBean.setAddress(props.getProperty("serviceUrl"));
@@ -82,6 +82,38 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
         // we know what we are doing
         factoryBean.setFeatures((List)Arrays.asList(new LoggingFeature()));
         approveService = (ApproveService)factoryBean.create();
+        */
+        approveService = new ApproveService() {
+            public Response approve(ApproveRequest message) {
+                File udir = new File(props.getProperty("upload"));
+                File adir = new File(props.getProperty("approve"));
+                File uf = new File(udir, message.getFileName());
+                File af = new File(adir, message.getFileName());
+                uf.renameTo(af);
+                uf = new File(udir, message.getFileName() + "_thumb");
+                af = new File(adir, message.getFileName() + "_thumb");
+                if (uf.exists()) {
+                    uf.renameTo(af);
+                }
+                return new Response();
+            }
+
+            public Response decline(DeclineRequest message) {
+                File udir = new File(props.getProperty("upload"));
+                File adir = new File(props.getProperty("decline"));
+                File uf = new File(udir, message.getFileName());
+                File af = new File(adir, message.getFileName());
+                uf.renameTo(af);
+
+                uf = new File(udir, message.getFileName() + "_thumb");
+                af = new File(adir, message.getFileName() + "_thumb");
+                if (uf.exists()) {
+                    uf.renameTo(af);
+                }
+                return new Response();
+            }
+            
+        };
     }
 
     @Override

@@ -31,7 +31,7 @@ public class Gallery extends Panel {
                 WebMarkupContainer secondContainer = new WebMarkupContainer(items.newChildId());
                 items.add(secondContainer);
 
-                secondContainer.add(file.createBigThumb("thumb"));
+                secondContainer.add(file.createSmallThumb("thumb"));
 
                 enrich(secondContainer, file, page);
             }
