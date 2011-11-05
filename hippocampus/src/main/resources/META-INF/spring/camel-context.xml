@@ -120,7 +120,7 @@
       <from uri="jms:memories.tweets" />
       <to uri="log:TWEET" />
       <setHeader headerName="CamelFileName"><simple>${body.id_str}</simple></setHeader>
-      <setHeader headerName="CamelFileParent"><constant>/x1/apachecon/tmp</constant></setHeader>
+      <setHeader headerName="CamelFileParent"><constant>/x1/apachecon/memories/upload</constant></setHeader>
       <setBody><simple>${body.text}</simple></setBody>
       <bean ref="speechBubble" method="generateBubbleImage" />
       <setHeader headerName="Content-Type">
