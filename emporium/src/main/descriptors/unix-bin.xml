@@ -4,6 +4,7 @@
     <id>unix-bin</id>
 
     <formats>
+        <format>dir</format>
         <format>tar.gz</format>
     </formats>
 
@@ -22,10 +23,6 @@
                 <exclude>NOTICE.txt</exclude>
                 <exclude>**/examples/**</exclude>
             </excludes>
-        </fileSet>
-        <fileSet>
-            <directory>target/dependencies/camel/apache-camel-${camel.version}/examples</directory>
-            <outputDirectory>/samples</outputDirectory>
         </fileSet>
 
         <!-- Expanded Karaf Runtime -->
