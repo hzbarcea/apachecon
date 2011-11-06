@@ -10,11 +10,22 @@
         <feature version="${activemq.version}">activemq</feature>
         <feature version="${activemq.version}">activemq-spring</feature>
         <feature version="${activemq.version}">activemq-blueprint</feature>
+
+        <feature>war</feature>
+        <feature version="${cxf.version}">cxf</feature>
         <feature version="${camel.version}">camel</feature>
         <feature version="${camel.version}">camel-blueprint</feature>
         <feature version="${camel.version}">camel-jms</feature>
-        <feature version="${cxf.version}">cxf</feature>
         <feature version="${camel.version}">camel-cxf</feature>
+        <feature version="${camel.version}">camel-jackson</feature>
+
+        <feature version="${camel.version}">camel-jms</feature>
+        <bundle>mvn:org.apache.camel/camel-mail/${camel.version}</bundle>
+
+        <feature version="${camel.version}">camel-exec</feature>
+
+        <bundle>mvn:com.apachecon.memories/speechbubble/${project.version}</bundle>
+        <bundle>mvn:com.apachecon.memories/hippocampus/${project.version}</bundle>
     </feature>
 
 </features>
