@@ -17,20 +17,14 @@
 
 package com.apachecon.memories.cxf;
 
-import com.apachecon.memories.cxf.ImageService.ImageList;
-
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
-import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -39,9 +33,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlMimeType;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.ws.BindingType;
 import javax.xml.ws.Endpoint;
 import javax.xml.ws.soap.SOAPBinding;
@@ -49,6 +40,8 @@ import javax.xml.ws.soap.SOAPBinding;
 import org.apache.cxf.helpers.IOUtils;
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.apache.cxf.jaxrs.lifecycle.SingletonResourceProvider;
+
+import com.apachecon.memories.cxf.ImageService.ImageList;
 
 /**
  * 
