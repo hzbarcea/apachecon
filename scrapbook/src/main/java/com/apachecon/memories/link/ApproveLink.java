@@ -4,8 +4,9 @@ import com.apachecon.memories.service.ImageService;
 import com.apachecon.memories.service.UserFile;
 
 public class ApproveLink extends AbstractLink {
+	private static final long serialVersionUID = 1L;
 
-    public ApproveLink(String id, UserFile model) {
+	public ApproveLink(String id, UserFile model) {
         super(id, model);
     }
 

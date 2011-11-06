@@ -14,15 +14,16 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
  * @author lukasz
  */
 public class Upload extends ScrapbookPage {
+	private static final long serialVersionUID = 1L;
 
-    private final static List<String> contentTypes = Arrays.asList("image/jpeg", "image/jpg", "image/png", "image/gif");
+	private static final List<String> contentTypes = Arrays.asList("image/jpeg", "image/jpg", "image/png", "image/gif");
 
     public Upload() {
         add(new FeedbackPanel("feedback"));
 
         ApprovedModel model = new ApprovedModel();
         add(new Thumbs("thumbs", 12, 4, model));
-        add(new BookmarkablePageLink("browse", Browse.class));
+        add(new BookmarkablePageLink<Browse>("browse", Browse.class));
 
         add(new UploadForm("uploadForm", contentTypes));
     }

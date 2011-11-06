@@ -11,8 +11,9 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 
 public class Gallery extends Panel {
+	private static final long serialVersionUID = 1L;
 
-    public Gallery(String id, IModel<List<UserFile>> model) {
+	public Gallery(String id, IModel<List<UserFile>> model) {
         super(id);
 
         RepeatingView frames = new RepeatingView("frames");

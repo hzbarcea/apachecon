@@ -10,8 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class AbstractLink extends AjaxLink<UserFile> {
+	private static final long serialVersionUID = 1L;
 
-    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
+	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     public AbstractLink(String id, UserFile model) {
         super(id, Model.of(model));

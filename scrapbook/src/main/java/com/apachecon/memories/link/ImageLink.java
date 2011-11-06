@@ -1,8 +1,5 @@
 package com.apachecon.memories.link;
 
-import com.apachecon.memories.service.UserFile;
-
-import java.io.FileInputStream;
 import java.io.InputStream;
 
 import org.apache.wicket.markup.html.link.Link;
@@ -12,9 +9,12 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 
-public class ImageLink extends Link<UserFile> {
+import com.apachecon.memories.service.UserFile;
 
-    public ImageLink(String id, UserFile model) {
+public class ImageLink extends Link<UserFile> {
+	private static final long serialVersionUID = 1L;
+
+	public ImageLink(String id, UserFile model) {
         super(id, Model.of(model));
     }
 

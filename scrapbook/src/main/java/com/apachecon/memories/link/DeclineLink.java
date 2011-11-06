@@ -4,8 +4,9 @@ import com.apachecon.memories.service.ImageService;
 import com.apachecon.memories.service.UserFile;
 
 public class DeclineLink extends AbstractLink {
+	private static final long serialVersionUID = 1L;
 
-    public DeclineLink(String id, UserFile model) {
+	public DeclineLink(String id, UserFile model) {
         super(id, model);
     }
 
@@ -13,5 +14,4 @@ public class DeclineLink extends AbstractLink {
     public void call(ImageService service) {
         service.decline(getModelObject().getName());
     }
-
 }

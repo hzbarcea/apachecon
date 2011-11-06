@@ -18,8 +18,9 @@ import org.apache.wicket.request.resource.ResourceStreamResource;
 import org.apache.wicket.util.resource.FileResourceStream;
 
 public class UserFile implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-    private File file;
+	private File file;
     private File thumb;
     private Boolean approved;
 

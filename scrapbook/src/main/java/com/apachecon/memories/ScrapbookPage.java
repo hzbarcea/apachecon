@@ -44,7 +44,9 @@ public class ScrapbookPage extends WebPage {
         }
 
         add(new ListView<Class>("menu", links) {
-            @Override
+			private static final long serialVersionUID = 1L;
+
+			@Override
             protected void populateItem(ListItem<Class> item) {
                 BookmarkablePageLink link = new BookmarkablePageLink("link", item.getModelObject());
 

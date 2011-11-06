@@ -11,9 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class UploadForm extends Form<Void> {
+	private static final long serialVersionUID = 1L;
 
-    private FileUploadField uploadField;
-    private final List<String> contentTypes;
+	private final List<String> contentTypes;
+	private FileUploadField uploadField;
 
     private transient Logger logger = LoggerFactory.getLogger(UploadForm.class);
 

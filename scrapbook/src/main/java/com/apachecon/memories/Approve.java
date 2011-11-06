@@ -5,8 +5,9 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 
 @AuthorizeInstantiation("admin")
 public class Approve extends ScrapbookPage {
+	private static final long serialVersionUID = 1L;
 
-    public Approve() {
+	public Approve() {
         add(new ApproveGallery("gallery", new AllModel()));
     }
 }

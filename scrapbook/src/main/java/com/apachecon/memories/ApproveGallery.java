@@ -14,8 +14,9 @@ import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.model.IModel;
 
 public class ApproveGallery extends Gallery {
+	private static final long serialVersionUID = 1L;
 
-    public ApproveGallery(String id, IModel<List<UserFile>> model) {
+	public ApproveGallery(String id, IModel<List<UserFile>> model) {
         super(id, model);
     }
 
@@ -33,13 +34,17 @@ public class ApproveGallery extends Gallery {
         secondContainer.add(decorator);
 
         secondContainer.add(new ApproveLink("approve", file) {
-            protected void update(AjaxRequestTarget target) {
+			private static final long serialVersionUID = 1L;
+
+			protected void update(AjaxRequestTarget target) {
                 decorator.add(AttributeModifier.replace("class", "approved"));
                 target.add(decorator);
             }
         });
         secondContainer.add(new DeclineLink("decline", file) {
-            protected void update(AjaxRequestTarget target) {
+			private static final long serialVersionUID = 1L;
+
+			protected void update(AjaxRequestTarget target) {
                 decorator.add(AttributeModifier.replace("class", "declined"));
                 target.add(decorator);
             }

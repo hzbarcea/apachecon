@@ -10,8 +10,9 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 
 public class BrowseGallery extends Gallery {
+	private static final long serialVersionUID = 1L;
 
-    public BrowseGallery(String id, IModel<List<UserFile>> model) {
+	public BrowseGallery(String id, IModel<List<UserFile>> model) {
         super(id, model);
     }
 
