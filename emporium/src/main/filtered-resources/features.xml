@@ -26,7 +26,11 @@
 
         <bundle>mvn:com.apachecon.memories/speechbubble/${project.version}</bundle>
         <bundle>mvn:com.apachecon.memories/hippocampus/${project.version}</bundle>
+    </feature>
 
+    <feature name="scrapbook" version="${project.version}" resolver='(obr)'>
+        <feature>war</feature>
+        <bundle>mvn:com.apachecon.memories/scrapbook/${project.version}/war?Webapp-Context=/</bundle>
     </feature>
 
 </features>
