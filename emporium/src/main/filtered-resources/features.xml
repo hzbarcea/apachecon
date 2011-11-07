@@ -26,6 +26,7 @@
 
         <bundle>mvn:com.apachecon.memories/speechbubble/${project.version}</bundle>
         <bundle>mvn:com.apachecon.memories/hippocampus/${project.version}</bundle>
+
     </feature>
 
 </features>

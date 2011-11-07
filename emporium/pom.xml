@@ -187,24 +187,6 @@
                             </artifactItems>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>unpack-camel</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.apache.camel</groupId>
-                                    <artifactId>apache-camel</artifactId>
-                                    <version>${camel.version}</version>
-                                    <type>tar.gz</type>
-                                    <outputDirectory>target/dependencies/camel</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
             <plugin>
