@@ -101,30 +101,11 @@
                         </goals>
                         <configuration>
                             <descriptors>
-                                <descriptor>mvn:org.apache.karaf.assemblies.features/standard/${karaf.version}/xml/features</descriptor>
-                                <descriptor>mvn:org.apache.karaf.assemblies.features/enterprise/${karaf.version}/xml/features</descriptor>
-                                <descriptor>mvn:org.apache.activemq/activemq-karaf/${activemq.version}/xml/features</descriptor>
-                                <descriptor>mvn:org.apache.camel.karaf/apache-camel/${camel.version}/xml/features</descriptor>
-                                <descriptor>mvn:org.apache.cxf.karaf/apache-cxf/${cxf.version}/xml/features</descriptor>
                                 <descriptor>file:${basedir}/target/classes/features.xml</descriptor>
                             </descriptors>
                             <features>
-                                <!-- Core Features -->
-                                <feature>spring</feature>
-                                <feature>spring-dm</feature>
-                                <feature>jetty</feature>
-                                <!-- ActiveMQ Features -->
-                                <feature>activemq</feature>
-                                <feature>activemq-blueprint</feature>
-                                <feature>activemq-spring</feature>
-                                <!-- Camel Features -->
-                                <feature>camel</feature>
-                                <feature>camel-core</feature>
-                                <feature>camel-spring</feature>
-                                <feature>camel-blueprint</feature>
-                                <feature>camel-cxf</feature>
-
                                 <feature>memories</feature>
+                                <feature>scrapbook</feature>
                             </features>
                             <repository>target/features-repo</repository>
                         </configuration>
