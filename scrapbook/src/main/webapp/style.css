@@ -40,10 +40,6 @@ h4{
 }
 
 input{
-	background: #ffffff;
-	border: 1px solid #c6c6c6;
-	border-radius: 3px;
-	height: 25px;
 	width: 208px;
 }
 
@@ -177,6 +173,8 @@ input{
 	over-flow: hidden;
 	padding-left: 10px;
 }
+
+#main.upload 
 	#main.upload #upload-box{
 		float: left;
 		margin-top: 25px;
