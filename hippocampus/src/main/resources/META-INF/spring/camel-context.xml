@@ -94,7 +94,7 @@
     <!-- On scheduled times a twitter search is triggered and the search url is built
          based on the max_id of the last result stored in the twitter.max_id file. 
          The actual search is performed by the route below -->
-    <route>
+    <route id="twitter-search">
       <from uri="{{schedule.fetch-tweets}}" />
       <pollEnrich uri="file:{{memories.home}}?fileName=twitter.max_id"/>
       <choice>
@@ -111,7 +111,7 @@
          one page a a time. Requests are posted in a seda queue, if the
          results indicate that there are other pages to fetch, a new 
          request is pushed to the queue -->
-    <route>
+    <route id="twitter-get-page">
       <from uri="seda:tweet-search" />
       <setHeader headerName="TwitterSearch"><simple>http://search.twitter.com/search.json${body}</simple></setHeader>
       <to uri="log:tweet-search" />
@@ -141,7 +141,7 @@
 
     <!-- Search requests are split in individual tweets and posted to the jms queue
          to be processed asynchronously/offline. -->
-    <route>
+    <route id="twitter-process-tweet">
       <from uri="jms:memories.tweets" />
       <setHeader headerName="CamelFileName"><simple>${body.id_str}</simple></setHeader>
       <setHeader headerName="CamelFileParent"><constant>/x1/apachecon/memories/upload</constant></setHeader>
@@ -150,7 +150,7 @@
     </route>
 
     <!-- Autonomous service (implemented as a Camel route that generates a speech bubble for a tweet. -->
-    <route>
+    <route id="tweet-bubble">
       <from uri="direct:bubble" />
       <bean ref="speechBubble" method="generateBubbleImage" />
       <setHeader headerName="Content-Type">
@@ -161,7 +161,7 @@
 
     <!-- Mock service to be used instead of the bubble generation above. 
          Used for testing to avoid generating a bunch of jpg files. -->
-    <route>
+    <route id="tweet-ignore">
       <!-- Test route that mocks out bubble jpg generation -->
       <from uri="direct:ignore" />
       <to uri="log:IGNORE" />
@@ -170,7 +170,7 @@
     <!-- Mosaic generation service, implemented to execute a script 
         (and ultimately invoke pymos, the library we use for this purpose)
         at scheduled times. -->
-    <route>
+    <route id="generate-mosaic">
       <from uri="{{schedule.generate}}" />
       <setHeader headerName="CamelExecCommandArgs"><constant>hadrian</constant></setHeader>
       <to uri="exec:{{script.generate}}" />
