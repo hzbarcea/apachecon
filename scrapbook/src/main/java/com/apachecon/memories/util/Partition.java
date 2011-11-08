@@ -65,5 +65,4 @@ public class Partition {
             return list.isEmpty();
         }
     }
-
 }

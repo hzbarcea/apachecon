@@ -139,9 +139,11 @@ public class SpeechBubble {
         int bubbleWidth = width - 2 * OUT_PADDING;
         int bubbleHeight = lines.size() * fm.getHeight() + 2 * IN_PADDING;
 
+        graphics.setColor(Color.WHITE);
+        graphics.fillRect(0, 0, bubbleWidth, bubbleHeight);
+
         graphics.setPaint(new GradientPaint(OUT_PADDING, OUT_PADDING, Color.CYAN, 
             OUT_PADDING, bubbleHeight - OUT_PADDING, Color.WHITE));
-
         // First thing is to draw the bubble with a thin black outline
         int arc = IN_PADDING * 4;
         graphics.fillRoundRect(OUT_PADDING, OUT_PADDING, bubbleWidth, bubbleHeight, arc, arc);
@@ -178,21 +180,24 @@ public class SpeechBubble {
      * @param f, the font we shall draw with
      * @param x, x-coordinate of the bubble relative to the arrow
      * @param y, y-coordinate of the bubble relative to the arrow
+     * 
+     * Note: JPEG format does not support transparency so we need to 
+     * use TYPE_INT_RGB and not TYPE_INT_ARGB (i.e. no alpha).
      */
     public BufferedImage generateBubbleImage(String s) {
         // Need a temporary image to process text lines
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         FontMetrics fm = image.createGraphics().getFontMetrics();
         List<String> lines = this.formatText(s, fm);
 
         // Now we can create the final image with the correct dimensions
         int h = lines.size() * fm.getHeight() + PIC_WIDTH + 2 * OUT_PADDING + IN_PADDING;
-        image = new BufferedImage(width, h, BufferedImage.TYPE_INT_ARGB);
+        image = new BufferedImage(width, h, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = image.createGraphics();
         graphics.setColor(Color.WHITE);
         graphics.fillRect(0, 0, width, h);
         paintBubble(lines, graphics);
-
+        
         return image;
     }
 }

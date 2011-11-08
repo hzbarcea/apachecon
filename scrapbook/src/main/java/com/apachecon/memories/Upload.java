@@ -32,7 +32,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 public class Upload extends ScrapbookPage {
 	private static final long serialVersionUID = 1L;
 
-	private static final List<String> contentTypes = Arrays.asList("image/jpeg", "image/jpg", "image/png", "image/gif");
+	private static final List<String> contentTypes = Arrays.asList("image/jpg", "image/jpg", "image/png", "image/gif");
 
     public Upload() {
         add(new FeedbackPanel("feedback"));

@@ -94,7 +94,7 @@
 
     <route>
       <from uri="{{schedule.fetch-tweets}}" />
-      <pollEnrich uri="file:/x1/apachecon?fileName=twitter.max_id"/>
+      <pollEnrich uri="file:{{memories.home}}?fileName=twitter.max_id"/>
       <choice>
         <when>
           <simple>${body} == null</simple>
@@ -113,11 +113,11 @@
       <unmarshal ref="twitter" />
       <setHeader headerName="NextPage"><simple>${body.next_page}</simple></setHeader>
       <setHeader headerName="MaxId"><simple>${body.max_id_str}</simple></setHeader>
-      <throttle timePeriodMillis="10000"><constant>5</constant>
-        <!-- split>
+      <throttle timePeriodMillis="1000"><constant>5</constant>
+        <split>
           <method bean="twitterSearch" method="tweets" />
           <to uri="jms:memories.tweets" />
-        </split -->
+        </split>
         <choice>
           <when>
             <simple>${header.NextPage} contains '?page'</simple>
@@ -127,7 +127,7 @@
           <otherwise>
             <setBody><simple>${body.max_id_str}</simple></setBody>
             <setHeader headerName="CamelFileName"><constant>twitter.max_id</constant></setHeader>
-            <to uri="file:/x1/apachecon" />
+            <to uri="file:{{memories.home}}" />
           </otherwise>
         </choice>
       </throttle>
@@ -135,11 +135,10 @@
 
     <route>
       <from uri="jms:memories.tweets" />
-      <to uri="log:TWEET" />
       <setHeader headerName="CamelFileName"><simple>${body.id_str}</simple></setHeader>
       <setHeader headerName="CamelFileParent"><constant>/x1/apachecon/memories/upload</constant></setHeader>
       <setBody><simple>${body.text}</simple></setBody>
-      <to uri="direct:ignore" />
+      <to uri="direct:bubble" />
     </route>
 
     <route>

@@ -79,8 +79,7 @@ public class ImageHandler {
     public static boolean isImage(String contentTypeHeader) {
         String contentType = getContentType(contentTypeHeader);
         int slash = contentType == null ? -1 : contentType.indexOf('/');
-        return slash >= 0
-               && ("image".equals(contentType.substring(0, slash)) || "application/octet-stream"
-                   .equals(contentType));
+        return slash >= 0 && ("image".equals(contentType.substring(0, slash)) 
+            || "application/octet-stream".equals(contentType));
     }
 }

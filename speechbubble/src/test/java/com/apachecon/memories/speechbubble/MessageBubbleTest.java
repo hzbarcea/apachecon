@@ -17,10 +17,7 @@
 package com.apachecon.memories.speechbubble;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import org.junit.Test;
 
@@ -30,6 +27,6 @@ public class MessageBubbleTest {
     public void testLastBubble() throws IOException {
         SpeechBubble bubble = new SpeechBubble();
         BufferedImage img = bubble.generateBubbleImage("Apachecon test");
-        ImageIO.write(img, "jpg", new File("target/bubble.jpg"));
+        ImageWriter.write(img, "bubble", "target", "jpg");
     }
 }

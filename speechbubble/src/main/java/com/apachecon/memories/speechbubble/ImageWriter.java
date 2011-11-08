@@ -51,7 +51,7 @@ public class ImageWriter {
             return;
         }
         File output = new File(target, filename + "." + imageFormat);
-        LOG.info("Writing '{}' image to file: {}", imageFormat, output.getAbsolutePath());
+        LOG.debug("Writing '{}' image to file: {}", imageFormat, output.getAbsolutePath());
         ImageIO.write(img, imageFormat, output);
     }
 }
