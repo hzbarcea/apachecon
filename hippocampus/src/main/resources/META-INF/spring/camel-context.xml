@@ -169,7 +169,7 @@
 
     <!-- Mosaic generation service, implemented to execute a script 
         (and ultimately invoke pymos, the library we use for this purpose)
-        at schedulet times. -->
+        at scheduled times. -->
     <route>
       <from uri="{{schedule.generate}}" />
       <setHeader headerName="CamelExecCommandArgs"><constant>hadrian</constant></setHeader>
