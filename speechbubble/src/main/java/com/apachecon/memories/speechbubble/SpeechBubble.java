@@ -39,8 +39,8 @@ public class SpeechBubble {
     };
     private static final Random RAND = new Random();
     
-    private static final int MAX_WIDTH = 194;
-    private static final int MAX_HEIGHT = 100;
+    private static final int MAX_WIDTH = 195;
+    private static final int MAX_HEIGHT = 130;
     private static final int PIC_WIDTH = 48;
     private static final int OUT_PADDING = 8;
     private static final int IN_PADDING = 4;
@@ -192,7 +192,7 @@ public class SpeechBubble {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         FontMetrics fm = image.createGraphics().getFontMetrics();
         List<String> lines = this.formatText(s, fm);
-
+/*
         // Now we can create the final image with the correct dimensions
         int h = lines.size() * fm.getHeight() + PIC_WIDTH + 2 * OUT_PADDING + IN_PADDING;
         image = new BufferedImage(width, h, BufferedImage.TYPE_INT_RGB);
@@ -200,7 +200,13 @@ public class SpeechBubble {
         graphics.setColor(Color.WHITE);
         graphics.fillRect(0, 0, width, h);
         paintBubble(lines, graphics);
-        
+*/        
+        image = new BufferedImage(MAX_WIDTH, MAX_HEIGHT, BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics = image.createGraphics();
+        graphics.setColor(Color.WHITE);
+        graphics.fillRect(0, 0, MAX_WIDTH, MAX_HEIGHT);
+        paintBubble(lines, graphics);
+
         return image;
     }
     

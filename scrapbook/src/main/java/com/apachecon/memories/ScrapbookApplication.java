@@ -85,6 +85,7 @@ public class ScrapbookApplication extends AuthenticatedWebApplication {
         
         imageService = new DefaultImageService();
         
+        imageService.setArchiveDirectory(new File(rootDirectory, "archive"));
         imageService.setUploadDirectory(new File(rootDirectory, "upload"));
         imageService.setApproveDirectory(new File(rootDirectory, "approve"));
         imageService.setDeclineDirectory(new File(rootDirectory, "decline"));

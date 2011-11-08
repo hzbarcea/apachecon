@@ -16,6 +16,7 @@
  */
 package com.apachecon.memories.service;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
@@ -56,42 +57,11 @@ public class UserFile implements Serializable {
     private Image createImage(String id, boolean small) {
         File f = small ? thumb : file;
         if (f == null) {
-            File f2 = new File(file.getParentFile(), file.getName() + "_thumb");
+        	// assume we only deal with .jpg files at this point
+            File f2 = new File(file.getParentFile(), getThumbName(file.getName()));
             if (!f2.exists()) {
                 try {
-                    BufferedImage i = ImageIO.read(new FileInputStream(file));
-                    int w = i.getWidth();
-                    int h = i.getHeight();
-                    int maxSize = 200;
-    
-                    if ((w > maxSize) || (h > maxSize)) {
-                        int neww;
-                        int newh;
-    
-                        if (w > h) {
-                            neww = maxSize;
-                            newh = (maxSize * h) / w;
-                        } else {
-                            neww = (maxSize * w) / h;
-                            newh = maxSize;
-                        }
-    
-                        BufferedImage bdest =
-                            new BufferedImage(neww, newh, i.getType());
-                        
-                        Graphics2D g = bdest.createGraphics();
-    
-                        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                                           RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-                         
-                        g.drawImage(i, 0, 0, neww , newh, null);
-                        g.dispose();
-                        
-                        ImageIO.write(bdest, getType(), f2);
-                        thumb = f2;
-                    } else {
-                        thumb = file;
-                    }
+                	thumb = generateThumbnail(file, f2, 200) ? f2 : file;
                 } catch (IOException ex) {
                     thumb = file;
                 }
@@ -129,4 +99,49 @@ public class UserFile implements Serializable {
         return new FileInputStream(file);
     }
 
+    public static String getThumbName(String filename) {
+        return filename.startsWith("thumb_") ? filename : "thumb_" + filename;
+    }
+
+    public static boolean generateThumbnail(File file, File thumb, int maxSize) throws IOException {
+        if (thumb.exists()) {
+        	return false;
+        }
+
+    	BufferedImage i = ImageIO.read(new FileInputStream(file));
+        int w = i.getWidth();
+        int h = i.getHeight();
+        int t = i.getType();
+
+        int neww = w;
+        int newh = h;
+        boolean resize = false;
+        if ((w > maxSize) || (h > maxSize)) {
+            if (w > h) {
+                neww = maxSize;
+                newh = (maxSize * h) / w;
+            } else {
+                neww = (maxSize * w) / h;
+                newh = maxSize;
+            }
+        }
+
+        if (file.getParent() == thumb.getParent() && !resize && BufferedImage.TYPE_INT_RGB == t) {
+        	return false;
+        }
+
+        BufferedImage bdest = new BufferedImage(neww, newh, t);
+        Graphics2D g = bdest.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, 
+            RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+
+        // Force white background if converting from ARGB types
+        g.setBackground(Color.WHITE);
+        g.drawImage(i, 0, 0, neww , newh, null);
+        g.dispose();
+        
+        String format = thumb.getName().substring(thumb.getName().lastIndexOf('.') + 1);
+        ImageIO.write(bdest, format, thumb);
+        return true;
+    }
 }

@@ -48,20 +48,19 @@ public class UploadForm extends Form<Void> {
 
     @Override
     protected void onSubmit() {
-//        for (FileUpload upload : uploadField.getFileUploads()) {
+        // for (FileUpload upload : uploadField.getFileUploads()) {
             FileUpload upload = uploadField.getFileUpload();
             if (!contentTypes.contains(upload.getContentType())) {
                 warn("File " + upload.getClientFileName() + " is not supported. Only images can be shared");
             } else {
                 try {
                     ScrapbookApplication.getImageService().newFile(upload);
-
                     info("File " + upload.getClientFileName() + " has been uploaded and now it waiting for approval");
                 } catch (Exception e) {
                     logger.error("Error processing uploaded file", e);
                     error("An error occured during file ");
                 }
-//            }
+        // }
         }
     }
 }

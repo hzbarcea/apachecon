@@ -29,14 +29,22 @@ import org.apache.wicket.markup.html.form.upload.FileUpload;
 
 public class DefaultImageService implements ImageService {
 
-    private static final FilenameFilter FILTER = new FilenameFilter() {
+    private static final FilenameFilter IMAGES = new FilenameFilter() {
         @Override
         public boolean accept(File dir, String name) {
             name = name.toLowerCase();
             return name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".gif");
         }
     };
+    private static final FilenameFilter THUMBNAILS = new FilenameFilter() {
+        @Override
+        public boolean accept(File dir, String name) {
+            return name.toLowerCase().endsWith(".jpg") 
+                && !name.toLowerCase().startsWith("thumb_");
+        }
+    };
 
+    private File archiveDirectory;
     private File approveDirectory;
     private File declineDirectory;
     private File uploadDirectory;
@@ -44,7 +52,7 @@ public class DefaultImageService implements ImageService {
     @Override
     public void newFile(FileUpload upload) throws Exception {
         String ext = upload.getClientFileName().substring(upload.getClientFileName().lastIndexOf('.'));
-        File file = new File(uploadDirectory, UUID.randomUUID() + ext);
+        File file = new File(archiveDirectory, UUID.randomUUID() + ext);
 
         InputStream is = upload.getInputStream();
         FileOutputStream os = new FileOutputStream(file);
@@ -56,21 +64,30 @@ public class DefaultImageService implements ImageService {
         }
         os.close();
         is.close();
+
+        // Now create a thumbnail in the uploadDirectory
+        String fn = file.getName().substring(0, file.getName().lastIndexOf('.'));
+        UserFile.generateThumbnail(file, new File(uploadDirectory, fn + ".jpg"), 200);
     }
 
     @Override
     public List<UserFile> getUploaded() {
-        return list(uploadDirectory.listFiles(FILTER), null);
+        return list(uploadDirectory.listFiles(THUMBNAILS), null);
     }
 
     @Override
     public List<UserFile> getApproved() {
-        return list(approveDirectory.listFiles(FILTER), true);
+        return list(approveDirectory.listFiles(THUMBNAILS), true);
     }
 
     @Override
     public List<UserFile> getDeclined() {
-        return list(declineDirectory.listFiles(FILTER), false);
+        return list(declineDirectory.listFiles(THUMBNAILS), false);
+    }
+
+    @Override
+    public List<UserFile> getArchived() {
+        return list(archiveDirectory.listFiles(IMAGES), null);
     }
 
     private List<UserFile> list(File[] listFiles, Boolean approved) {
@@ -110,13 +127,18 @@ public class DefaultImageService implements ImageService {
         uploadDirectory.mkdirs();
     }
 
+    public void setArchiveDirectory(File directory) {
+        archiveDirectory = directory;
+        archiveDirectory.mkdirs();
+    }
+
     public void approve(String name) {
         File uf = new File(uploadDirectory, name);
         File af = new File(approveDirectory, name);
         uf.renameTo(af);
         
-        uf = new File(uploadDirectory, name + "_thumb");
-        af = new File(approveDirectory, name + "_thumb");
+        uf = new File(uploadDirectory, UserFile.getThumbName(name));
+        af = new File(approveDirectory, UserFile.getThumbName(name));
         if (uf.exists()) {
             uf.renameTo(af);
         }
@@ -127,11 +149,10 @@ public class DefaultImageService implements ImageService {
         File af = new File(declineDirectory, name);
         uf.renameTo(af);
         
-        uf = new File(uploadDirectory, name + "_thumb");
-        af = new File(declineDirectory, name + "_thumb");
+        uf = new File(uploadDirectory, UserFile.getThumbName(name));
+        af = new File(declineDirectory, UserFile.getThumbName(name));
         if (uf.exists()) {
             uf.renameTo(af);
         }
     }
-
 }

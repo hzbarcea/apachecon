@@ -30,6 +30,8 @@ public interface ImageService {
 
     List<UserFile> getDeclined();
 
+    List<UserFile> getArchived();
+
     List<UserFile> getAll();
 
     
