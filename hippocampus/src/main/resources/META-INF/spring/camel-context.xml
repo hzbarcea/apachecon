@@ -172,7 +172,7 @@
         at scheduled times. -->
     <route id="generate-mosaic">
       <from uri="{{schedule.generate}}" />
-      <setHeader headerName="CamelExecCommandArgs"><constant>hadrian</constant></setHeader>
+      <setHeader headerName="CamelExecCommandArgs"><constant>feather</constant></setHeader>
       <to uri="exec:{{script.generate}}" />
     </route>
       
