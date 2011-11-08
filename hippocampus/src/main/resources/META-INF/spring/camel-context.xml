@@ -82,16 +82,18 @@
   </jaxrs:server>
   <jaxws:endpoint address="/soap-memories" implementor="#imageServiceBean"/>
 
-  <!--TODO: add route description -->
   <camelContext trace="true" xmlns="http://camel.apache.org/schema/spring">
     <package>com.apachecon.memories</package>
 
-    <!-- json jackson data formats to be used -->
+    <!-- Use json (via jackson library) to unmarshal twitter search results -->
     <dataFormats>
       <!-- json data format for Twitter searches -->
       <json id="twitter" library="Jackson" unmarshalTypeName="com.apachecon.memories.twitter.Search"/>
     </dataFormats>
 
+    <!-- On scheduled times a twitter search is triggered and the search url is built
+         based on the max_id of the last result stored in the twitter.max_id file. 
+         The actual search is performed by the route below -->
     <route>
       <from uri="{{schedule.fetch-tweets}}" />
       <pollEnrich uri="file:{{memories.home}}?fileName=twitter.max_id"/>
@@ -105,6 +107,10 @@
       <to uri="seda:tweet-search" />
     </route>
 
+    <!-- Searches for twitter posts using a hardcoded query (#apachecon)
+         one page a a time. Requests are posted in a seda queue, if the
+         results indicate that there are other pages to fetch, a new 
+         request is pushed to the queue -->
     <route>
       <from uri="seda:tweet-search" />
       <setHeader headerName="TwitterSearch"><simple>http://search.twitter.com/search.json${body}</simple></setHeader>
@@ -133,6 +139,8 @@
       </throttle>
     </route>
 
+    <!-- Search requests are split in individual tweets and posted to the jms queue
+         to be processed asynchronously/offline. -->
     <route>
       <from uri="jms:memories.tweets" />
       <setHeader headerName="CamelFileName"><simple>${body.id_str}</simple></setHeader>
@@ -141,6 +149,7 @@
       <to uri="direct:bubble" />
     </route>
 
+    <!-- Autonomous service (implemented as a Camel route that generates a speech bubble for a tweet. -->
     <route>
       <from uri="direct:bubble" />
       <bean ref="speechBubble" method="generateBubbleImage" />
@@ -150,12 +159,17 @@
       <bean ref="imageHandler" method="writeImage" />
     </route>
 
+    <!-- Mock service to be used instead of the bubble generation above. 
+         Used for testing to avoid generating a bunch of jpg files. -->
     <route>
       <!-- Test route that mocks out bubble jpg generation -->
       <from uri="direct:ignore" />
       <to uri="log:IGNORE" />
     </route>
 
+    <!-- Mosaic generation service, implemented to execute a script 
+        (and ultimately invoke pymos, the library we use for this purpose)
+        at schedulet times. -->
     <route>
       <from uri="{{schedule.generate}}" />
       <setHeader headerName="CamelExecCommandArgs"><constant>hadrian</constant></setHeader>
