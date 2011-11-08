@@ -16,12 +16,6 @@
  */
 package com.apachecon.memories.hippocampus;
 
-import com.apachecon.memories.twitter.Metadata;
-import com.apachecon.memories.twitter.Search;
-import com.apachecon.memories.twitter.Tweet;
-
-import java.util.Calendar;
-
 import org.apache.camel.test.junit4.CamelSpringTestSupport;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -34,45 +28,7 @@ public class TwitterConnectionTest extends CamelSpringTestSupport {
 
     @Test
     public void testTweets() throws Exception {
-        Metadata m = new Metadata();
-        m.setResult_type("recent");
-
-        Tweet t = new Tweet();
-        t.setCreated_at(Calendar.getInstance().getTime());
-        t.setFrom_user("Penguinista");
-        t.setFrom_user_id(5937811L);
-        t.setFrom_user_id_str("5937811");
-        t.setGeo(null);
-        t.setId(131094616308056064L);
-        t.setId_str("131094616308056064");
-        t.setIso_language_code("en");
-        t.setMetadata(m);
-        t.setProfile_image_url("http://a1.twimg.com/profile_images/1158329686/AB_Twit_normal.jpg");
-        t.setSource("&lt;a href=&quot;http://www.tweetdeck.com&quot; rel=&quot;nofollow&quot;&gt;TweetDeck&lt;/a&gt;");
-        t.setText("RT @ivanristic: RT @jimjag: benchmarking #nginx 1.1.6 and #apache #httpd 2.3.15-dev\u2026 Apache has quicker transaction times! Will describe at #apachecon");
-        t.setTo_user(null);
-        t.setTo_user_id(null);
-        t.setTo_user_id_str("null");
-
-        Search s = new Search();
-        s.setCompleted_in(0.175);
-        s.setMax_id(131094616308056064L);
-        s.setMax_id_str("131094616308056064");
-        s.setPage(1);
-        s.setQuery("%23apachecon");
-        s.setRefresh_url("?since_id=131094616308056064&q=%23apachecon");
-        s.getResults().add(t);
-        s.setResults_per_page(15);
-        s.setSince_id(131073333025447936L);
-        s.setSince_id_str("131073333025447936");
-
         template.sendBody("{{schedule.fetch-tweets}}", "content ignored... overwritten by pollEnrich");
-        /*
-         * MockEndpoint mock = (MockEndpoint)context.getEndpoint("mock:result");
-         * mock.expectedMinimumMessageCount(1); mock.assertIsSatisfied();
-         */
-        // assertTrue(mock.assertExchangeReceived(0).getIn().getBody()
-        // s = mock.assertExchangeReceived(0).getIn().getBody(Search.class);
-        Thread.sleep(20000);
+        Thread.sleep(5000);
     }
 }
