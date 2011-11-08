@@ -26,15 +26,21 @@ import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SpeechBubble {
     private static final Logger LOG = LoggerFactory.getLogger(SpeechBubble.class);
-
-    private static final int MAX_WIDTH = 320;
-    private static final int MAX_HEIGHT = 240;
+    // TODO: add some colors from the ASF feather palette
+    private static final Color[] GRADIENTS = {
+    	Color.CYAN, Color.MAGENTA, Color.GREEN, Color.YELLOW
+    };
+    private static final Random RAND = new Random();
+    
+    private static final int MAX_WIDTH = 194;
+    private static final int MAX_HEIGHT = 100;
     private static final int PIC_WIDTH = 48;
     private static final int OUT_PADDING = 8;
     private static final int IN_PADDING = 4;
@@ -139,10 +145,7 @@ public class SpeechBubble {
         int bubbleWidth = width - 2 * OUT_PADDING;
         int bubbleHeight = lines.size() * fm.getHeight() + 2 * IN_PADDING;
 
-        graphics.setColor(Color.WHITE);
-        graphics.fillRect(0, 0, bubbleWidth, bubbleHeight);
-
-        graphics.setPaint(new GradientPaint(OUT_PADDING, OUT_PADDING, Color.CYAN, 
+        graphics.setPaint(new GradientPaint(OUT_PADDING, OUT_PADDING, randomGradient(), 
             OUT_PADDING, bubbleHeight - OUT_PADDING, Color.WHITE));
         // First thing is to draw the bubble with a thin black outline
         int arc = IN_PADDING * 4;
@@ -199,5 +202,9 @@ public class SpeechBubble {
         paintBubble(lines, graphics);
         
         return image;
+    }
+    
+    public static Color randomGradient() {
+    	return GRADIENTS[RAND.nextInt() % GRADIENTS.length];    	
     }
 }
