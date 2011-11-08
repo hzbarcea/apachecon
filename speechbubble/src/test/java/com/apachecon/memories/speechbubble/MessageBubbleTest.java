@@ -30,6 +30,6 @@ public class MessageBubbleTest {
     public void testLastBubble() throws IOException {
         SpeechBubble bubble = new SpeechBubble();
         BufferedImage img = bubble.generateBubbleImage("Apachecon test");
-        ImageIO.write(img, "png", new File("target/bubble.png"));
+        ImageIO.write(img, "jpg", new File("target/bubble.jpg"));
     }
 }

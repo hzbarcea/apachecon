@@ -139,9 +139,8 @@ public class SpeechBubble {
         int bubbleWidth = width - 2 * OUT_PADDING;
         int bubbleHeight = lines.size() * fm.getHeight() + 2 * IN_PADDING;
 
-        graphics.setPaint(new GradientPaint(OUT_PADDING, OUT_PADDING, Color.CYAN, OUT_PADDING, bubbleHeight
-                                                                                               - OUT_PADDING,
-                                            Color.WHITE));
+        graphics.setPaint(new GradientPaint(OUT_PADDING, OUT_PADDING, Color.CYAN, 
+            OUT_PADDING, bubbleHeight - OUT_PADDING, Color.WHITE));
 
         // First thing is to draw the bubble with a thin black outline
         int arc = IN_PADDING * 4;

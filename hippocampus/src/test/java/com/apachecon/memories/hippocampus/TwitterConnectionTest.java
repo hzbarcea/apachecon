@@ -66,14 +66,13 @@ public class TwitterConnectionTest extends CamelSpringTestSupport {
         s.setSince_id(131073333025447936L);
         s.setSince_id_str("131073333025447936");
 
-        template.sendBody("seda:tweets", "Hello world");
+        template.sendBody("{{schedule.fetch-tweets}}", "content ignored... overwritten by pollEnrich");
         /*
          * MockEndpoint mock = (MockEndpoint)context.getEndpoint("mock:result");
          * mock.expectedMinimumMessageCount(1); mock.assertIsSatisfied();
          */
         // assertTrue(mock.assertExchangeReceived(0).getIn().getBody()
-        // instanceof Tweet);
         // s = mock.assertExchangeReceived(0).getIn().getBody(Search.class);
-        Thread.sleep(5000);
+        Thread.sleep(20000);
     }
 }

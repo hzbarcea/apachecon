@@ -35,26 +35,11 @@ public class TwitterSearch {
         return new TweetsAggregation();
     }
 
-    public static Foo defaultFoo() {
-        return new Foo();
-    }
-
     // Default AggregationStrategy for (poll)Enrich
     private static class TweetsAggregation implements AggregationStrategy {
         public Exchange aggregate(Exchange oldExchange, Exchange newExchange) {
             // ignore request, just use newExchange, the result of Enrich
-            if (oldExchange != null) {
-                ExchangeHelper.copyResultsPreservePattern(oldExchange, newExchange);
-            }
-            return oldExchange;
-        }
-    }
-
-    public static class Foo {
-        public void bar(Search search) {
-            if (search.getNext_page() != null) {
-                LOG.info("FOOBAR: next_page: {}", search.getNext_page());
-            }
+            return newExchange;
         }
     }
 }

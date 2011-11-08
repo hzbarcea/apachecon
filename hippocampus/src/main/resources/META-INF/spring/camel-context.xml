@@ -70,14 +70,12 @@
   <bean id="imageHandler" class="com.apachecon.memories.hippocampus.ImageHandler" />
   <bean id="twitterSearch" class="com.apachecon.memories.twitter.TwitterSearch" />
   <bean id="defaultAggregator" class="com.apachecon.memories.twitter.TwitterSearch" factory-method="defaultAggregation" />
-  <bean id="foobar" class="com.apachecon.memories.twitter.TwitterSearch" factory-method="defaultFoo" />
 
 
   <bean class="com.apachecon.memories.cxf.UploadService" id="imageServiceBean">
     <constructor-arg value="/x1/apachecon/memories"/>
   </bean>
-  <jaxrs:server id="jaxrsService"
-                        address="/memories">
+  <jaxrs:server id="jaxrsService" address="/memories">
     <jaxrs:serviceBeans>
       <ref bean="imageServiceBean" />
     </jaxrs:serviceBeans>                  
@@ -95,25 +93,44 @@
     </dataFormats>
 
     <route>
-      <from uri="seda:tweets" />
-      <setHeader headerName="TwitterSearch"><constant>http://search.twitter.com/search.json?q=apachecon&amp;since_id=131073333025447936</constant></setHeader>
+      <from uri="{{schedule.fetch-tweets}}" />
+      <pollEnrich uri="file:/x1/apachecon?fileName=twitter.max_id"/>
+      <choice>
+        <when>
+          <simple>${body} == null</simple>
+          <setBody><constant>0</constant></setBody>
+        </when>
+      </choice>
+      <setBody><simple>?q=apachecon&amp;since_id=${body}</simple></setBody>
+      <to uri="seda:tweet-search" />
+    </route>
+
+    <route>
+      <from uri="seda:tweet-search" />
+      <setHeader headerName="TwitterSearch"><simple>http://search.twitter.com/search.json${body}</simple></setHeader>
+      <to uri="log:tweet-search" />
       <routingSlip><header>TwitterSearch</header></routingSlip>
       <unmarshal ref="twitter" />
       <setHeader headerName="NextPage"><simple>${body.next_page}</simple></setHeader>
-      <to uri="bean:foobar" />
-      <split>
-        <method bean="twitterSearch" method="tweets" />
-        <to uri="jms:memories.tweets" />
-      </split>
-      <choice>
-        <when>
-          <simple>${header.TwitterSearch} contains '?page'</simple>
-        </when>
-        <otherwise>
-        </otherwise>
-      </choice>
-      <setBody><simple>http://search.twitter.com/search.json${header.NextPage}</simple></setBody>
-      <to uri="log:BARFOO" />
+      <setHeader headerName="MaxId"><simple>${body.max_id_str}</simple></setHeader>
+      <throttle timePeriodMillis="10000"><constant>5</constant>
+        <!-- split>
+          <method bean="twitterSearch" method="tweets" />
+          <to uri="jms:memories.tweets" />
+        </split -->
+        <choice>
+          <when>
+            <simple>${header.NextPage} contains '?page'</simple>
+            <setBody><simple>${body.next_page}</simple></setBody>
+            <to uri="seda:tweet-search" />
+          </when>
+          <otherwise>
+            <setBody><simple>${body.max_id_str}</simple></setBody>
+            <setHeader headerName="CamelFileName"><constant>twitter.max_id</constant></setHeader>
+            <to uri="file:/x1/apachecon" />
+          </otherwise>
+        </choice>
+      </throttle>
     </route>
 
     <route>
@@ -122,11 +139,22 @@
       <setHeader headerName="CamelFileName"><simple>${body.id_str}</simple></setHeader>
       <setHeader headerName="CamelFileParent"><constant>/x1/apachecon/memories/upload</constant></setHeader>
       <setBody><simple>${body.text}</simple></setBody>
+      <to uri="direct:ignore" />
+    </route>
+
+    <route>
+      <from uri="direct:bubble" />
       <bean ref="speechBubble" method="generateBubbleImage" />
       <setHeader headerName="Content-Type">
-        <constant>image/png</constant>
+        <constant>image/jpg</constant>
       </setHeader>
       <bean ref="imageHandler" method="writeImage" />
+    </route>
+
+    <route>
+      <!-- Test route that mocks out bubble jpg generation -->
+      <from uri="direct:ignore" />
+      <to uri="log:IGNORE" />
     </route>
 
     <route>
