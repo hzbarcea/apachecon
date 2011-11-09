@@ -22,6 +22,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -35,14 +36,28 @@ import org.apache.wicket.request.resource.ResourceStreamResource;
 import org.apache.wicket.util.resource.FileResourceStream;
 
 public class UserFile implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private File file;
+    private File file;
     private File thumb;
     private Boolean approved;
 
-    public UserFile(File file, Boolean approved) {
-        this.file = file;
+    public UserFile(final File file, Boolean approved) {
+        this.thumb = file;
+        this.file = new File(thumb.getParentFile().getParent(), "archive");
+        final String stem = thumb.getName().substring(0, thumb.getName().length() - 4).toLowerCase();
+        File files[] = this.file.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                name = name.toLowerCase();
+                return name.startsWith(stem) 
+                    && (name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".gif"));
+            }
+        });
+        if (files != null && files.length > 0) {
+            this.file = files[0];
+        } else {
+            this.file = thumb;
+        }
         this.approved = approved;
     }
 
@@ -56,46 +71,8 @@ public class UserFile implements Serializable {
 
     private Image createImage(String id, boolean small) {
         File f = small ? thumb : file;
-        if (f == null) {
-        	// assume we only deal with .jpg files at this point
-            // File f2 = new File(file.getParentFile(), getThumbName(file.getName()));
-        	File f2 = file;
-            if (!f2.exists()) {
-                try {
-                    BufferedImage i = ImageIO.read(new FileInputStream(file));
-                    int w = i.getWidth();
-                    int h = i.getHeight();
-                    int maxSize = 200;
-
-                    if ((w > maxSize) || (h > maxSize)) {
-                        int neww;
-                        int newh;
-                        if (w > h) {
-                            neww = maxSize;
-                            newh = (maxSize * h) / w;
-                        } else {
-                            neww = (maxSize * w) / h;
-                            newh = maxSize;
-                        }
-
-                        BufferedImage bdest = new BufferedImage(neww, newh, i.getType());
-                        Graphics2D g = bdest.createGraphics();
-                        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-                        g.drawImage(i, 0, 0, neww , newh, null);
-                        g.dispose();
-	                    ImageIO.write(bdest, getType(), f2);
-	                    thumb = f2;
-                    } else {
-                        thumb = file;
-                    }
-                } catch (IOException ex) {
-                    thumb = file;
-                }
-            } else {
-                thumb = f2;
-            }
-            f = thumb;
-        }
+        
+        System.out.println(small + "  " + f);
         IResource resource = new ResourceStreamResource(new FileResourceStream(f));
         return new Image(id, resource);
     }
@@ -123,10 +100,6 @@ public class UserFile implements Serializable {
 
     public InputStream getInputStream() throws IOException {
         return new FileInputStream(file);
-    }
-
-    public static String getThumbName(String filename) {
-        return filename.startsWith("thumb-") ? filename : "thumb-" + filename;
     }
 
     public static boolean generateThumbnail(File file, File thumb, int maxSize) throws IOException {
