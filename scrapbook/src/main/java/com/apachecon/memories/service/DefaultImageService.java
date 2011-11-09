@@ -66,7 +66,9 @@ public class DefaultImageService implements ImageService {
 
     @Override
     public List<UserFile> getApproved() {
-        return list(approveDirectory.listFiles(FILTER), true);
+        List<UserFile> l = list(approveDirectory.listFiles(FILTER), true);
+        Collections.shuffle(l);
+        return l;
     }
 
     @Override
@@ -92,7 +94,7 @@ public class DefaultImageService implements ImageService {
         files.addAll(getUploaded());
         files.addAll(getApproved());
         files.addAll(getDeclined());
-        //Collections.shuffle(files);
+        Collections.shuffle(files);
         return files;
     }
 
