@@ -94,7 +94,7 @@
     <!-- On scheduled times a twitter search is triggered and the search url is built
          based on the max_id of the last result stored in the twitter.max_id file. 
          The actual search is performed by the route below -->
-    <route id="twitter-search">
+    <route id="twitter-search" autoStartup="false">
       <from uri="{{schedule.fetch-tweets}}" />
       <pollEnrich uri="file:{{memories.home}}?fileName=twitter.max_id"/>
       <choice>
@@ -167,10 +167,17 @@
       <to uri="log:IGNORE" />
     </route>
 
+    <!-- Generate thumbnails for uploaded images. -->
+    <route id="generate-thumbs">
+      <from uri="file:{{memories.home}}/memories/archive?noop=true" />
+      <setHeader headerName="MemoriesUploads"><constant>upload</constant></setHeader>
+      <bean ref="imageHandler" method="generateThumbnail" />
+    </route>
+
     <!-- Mosaic generation service, implemented to execute a script 
         (and ultimately invoke pymos, the library we use for this purpose)
         at scheduled times. -->
-    <route id="generate-mosaic">
+    <route id="generate-mosaic" autoStartup="false">
       <from uri="{{schedule.generate}}" />
       <setHeader headerName="CamelExecCommandArgs"><constant>feather</constant></setHeader>
       <to uri="exec:{{script.generate}}" />

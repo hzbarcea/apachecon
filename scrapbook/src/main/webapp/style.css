@@ -374,3 +374,19 @@ input{
 	.browsable #container .item.last{
 		margin-right: 0;
 	}
+	
+	div.item > img {
+	    width: 185px;
+	    height: 120px;
+	    display: block;
+	}
+
+	a > img {
+	    width: 81px;
+	    height: 66px;
+	    display: block;
+	}
+
+	.upload #latest-uploads {
+	    padding-left: 25px;
+	}

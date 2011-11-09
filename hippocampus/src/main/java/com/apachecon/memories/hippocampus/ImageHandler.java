@@ -27,6 +27,7 @@ import javax.activation.DataHandler;
 
 import org.apache.camel.Body;
 import org.apache.camel.Header;
+import org.apache.camel.component.file.GenericFile;
 import org.apache.camel.util.ObjectHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,7 @@ import org.slf4j.LoggerFactory;
 public class ImageHandler {
     private static final Logger LOG = LoggerFactory.getLogger(ImageHandler.class);
     private static final String CONTENT_TYPE_PREFIX = "image/";
+    private static final int DEF_THUMBNAIL_MAX = 200;
 
     public ImageHandler() {
         // Complete
@@ -60,15 +62,26 @@ public class ImageHandler {
         fos.close();
     }
 
-    public void writeImage(@Body RenderedImage img, @Header(value = "CamelFileName") String filename,
-                           @Header(value = "CamelFileParent") String parent,
-                           @Header(value = "Content-Type") String contentType) throws IOException {
+    public void writeImage(@Body RenderedImage img, 
+        @Header(value = "CamelFileName") String filename,
+        @Header(value = "CamelFileParent") String parent,
+        @Header(value = "Content-Type") String contentType) throws IOException {
 
         String ct = getContentType(contentType);
         if (ObjectHelper.isEmpty(ct) || !ct.startsWith(CONTENT_TYPE_PREFIX)) {
             LOG.warn("Content-Type not provided or invalid {}. Request ignored", contentType);
         }
         ImageWriter.write(img, filename, parent, ct.substring(CONTENT_TYPE_PREFIX.length()));
+    }
+
+    public void generateThumbnail(@Body GenericFile<File> img, 
+        @Header(value = "MemoriesUploads") String target,
+        @Header(value = "ThumbnailMaxSize") String maxSize) throws IOException {
+
+        File source = img.getFile();
+        File parent = new File(source.getParentFile().getParentFile(), target);
+        LOG.debug("Generating thumbnail for {}", img.getAbsoluteFilePath());
+        ImageWriter.generateThumbnail(source, parent, maxSize == null ? DEF_THUMBNAIL_MAX : Integer.parseInt(maxSize));
     }
 
     public static String getContentType(String contentType) {
