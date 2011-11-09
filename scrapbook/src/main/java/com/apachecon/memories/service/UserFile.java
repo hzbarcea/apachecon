@@ -72,7 +72,6 @@ public class UserFile implements Serializable {
     private Image createImage(String id, boolean small) {
         File f = small ? thumb : file;
         
-        System.out.println(small + "  " + f);
         IResource resource = new ResourceStreamResource(new FileResourceStream(f));
         return new Image(id, resource);
     }
