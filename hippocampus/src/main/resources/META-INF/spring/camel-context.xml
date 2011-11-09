@@ -144,7 +144,7 @@
     <route id="twitter-process-tweet">
       <from uri="jms:memories.tweets" />
       <setHeader headerName="CamelFileName"><simple>${body.id_str}</simple></setHeader>
-      <setHeader headerName="CamelFileParent"><constant>/x1/apachecon/memories/upload</constant></setHeader>
+      <setHeader headerName="CamelFileParent"><constant>/x1/apachecon/memories/approve</constant></setHeader>
       <setBody><simple>${body.text}</simple></setBody>
       <to uri="direct:bubble" />
     </route>
