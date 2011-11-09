@@ -17,6 +17,8 @@
         <feature version="${camel.version}">camel-blueprint</feature>
         <feature version="${camel.version}">camel-jms</feature>
         <feature version="${camel.version}">camel-cxf</feature>
+
+        <feature version="${camel.version}">camel-quartz</feature>
         <feature version="${camel.version}">camel-jackson</feature>
 
         <feature version="${camel.version}">camel-jms</feature>

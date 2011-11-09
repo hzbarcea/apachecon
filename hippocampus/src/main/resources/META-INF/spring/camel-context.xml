@@ -63,7 +63,7 @@
 
 
   <bean id="properties" class="org.apache.camel.component.properties.PropertiesComponent">
-    <property name="location" value="classpath:memories-test.properties"/>
+    <property name="location" value="classpath:memories-prod.properties"/>
   </bean>
 
   <bean id="speechBubble" class="com.apachecon.memories.speechbubble.SpeechBubble" />
