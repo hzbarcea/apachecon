@@ -61,8 +61,10 @@ public class UploadService {
 
     
     File uploadPath;
+    File archivePath;
     File approvePath;
     public UploadService(File p) {
+        archivePath = new File(p, "archive");
         uploadPath = new File(p, "upload");
         approvePath = new File(p, "approve");
         uploadPath.mkdirs();
@@ -90,7 +92,7 @@ public class UploadService {
     @Produces("text/plain")
     @Path("/upload")
     public String uploadJPG(byte[] image) throws IOException {
-        File f = File.createTempFile("cxfupload", ".jpg", uploadPath);
+        File f = File.createTempFile("cxfupload", ".jpg", archivePath);
         FileOutputStream fout = new FileOutputStream(f);
         fout.write(image);
         fout.close();
@@ -101,7 +103,7 @@ public class UploadService {
     @Produces("text/plain")
     @Path("/upload")
     public String uploadPNG(byte[] image) throws IOException {
-        File f = File.createTempFile("cxfupload", ".png", uploadPath);
+        File f = File.createTempFile("cxfupload", ".png", archivePath);
         FileOutputStream fout = new FileOutputStream(f);
         fout.write(image);
         fout.close();
@@ -112,7 +114,7 @@ public class UploadService {
     @Produces("text/plain")
     @Path("/upload")
     public String uploadGIF(byte[] image) throws IOException {
-        File f = File.createTempFile("cxfupload", ".gif", uploadPath);
+        File f = File.createTempFile("cxfupload", ".gif", archivePath);
         FileOutputStream fout = new FileOutputStream(f);
         fout.write(image);
         fout.close();
