@@ -75,13 +75,11 @@ public class ImageHandler {
     }
 
     public void generateThumbnail(@Body GenericFile<File> img, 
-        @Header(value = "MemoriesUploads") String target,
         @Header(value = "ThumbnailMaxSize") String maxSize) throws IOException {
 
         File source = img.getFile();
-        File parent = new File(source.getParentFile().getParentFile(), target);
         LOG.debug("Generating thumbnail for {}", img.getAbsoluteFilePath());
-        ImageWriter.generateThumbnail(source, parent, maxSize == null ? DEF_THUMBNAIL_MAX : Integer.parseInt(maxSize));
+        ImageWriter.generateThumbnail(source, maxSize == null ? DEF_THUMBNAIL_MAX : Integer.parseInt(maxSize));
     }
 
     public static String getContentType(String contentType) {

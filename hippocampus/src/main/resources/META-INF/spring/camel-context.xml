@@ -170,7 +170,6 @@
     <!-- Generate thumbnails for uploaded images. -->
     <route id="generate-thumbs">
       <from uri="file:{{memories.home}}/memories/archive?noop=true" />
-      <setHeader headerName="MemoriesUploads"><constant>upload</constant></setHeader>
       <bean ref="imageHandler" method="generateThumbnail" />
     </route>
 

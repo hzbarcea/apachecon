@@ -61,11 +61,14 @@ public class ImageWriter {
         ImageIO.write(img, imageFormat, output);
     }
 
-    public static void generateThumbnail(File source, File parent, int maxSize) throws IOException {
-    	String fn = source.getName().substring(0, source.getName().lastIndexOf('.'));
-    	File thumb = new File(parent, fn + ".jpg");
-        if (thumb.exists()) {
-            LOG.debug("Thumbnail already present for {}", thumb.getAbsoluteFile());
+    public static void generateThumbnail(File source, int maxSize) throws IOException {
+    	String fn = source.getName().substring(0, source.getName().lastIndexOf('.')) + ".jpg";
+    	File parent = new File(source.getParentFile().getParent());
+    	File thumb = new File(new File(parent, "upload"), fn);
+        if (thumb.exists() 
+            || new File(new File(parent, "approve"), fn).exists()
+            || new File(new File(parent, "decline"), fn).exists()) {
+            LOG.debug("Thumbnail already present for {}", fn);
             return;
         }
 
