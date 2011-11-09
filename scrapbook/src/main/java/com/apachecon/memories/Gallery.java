@@ -59,7 +59,5 @@ public class Gallery extends Panel {
     }
 
     protected void enrich(WebMarkupContainer secondContainer, UserFile file, int page) {
-        
     }
-
 }

@@ -29,18 +29,11 @@ import org.apache.wicket.markup.html.form.upload.FileUpload;
 
 public class DefaultImageService implements ImageService {
 
-    private static final FilenameFilter IMAGES = new FilenameFilter() {
+    private static final FilenameFilter FILTER = new FilenameFilter() {
         @Override
         public boolean accept(File dir, String name) {
             name = name.toLowerCase();
             return name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".gif");
-        }
-    };
-    private static final FilenameFilter THUMBNAILS = new FilenameFilter() {
-        @Override
-        public boolean accept(File dir, String name) {
-            return name.toLowerCase().endsWith(".jpg") 
-                && !name.toLowerCase().startsWith("thumb_");
         }
     };
 
@@ -64,30 +57,21 @@ public class DefaultImageService implements ImageService {
         }
         os.close();
         is.close();
-
-        // Now create a thumbnail in the uploadDirectory
-        String fn = file.getName().substring(0, file.getName().lastIndexOf('.'));
-        UserFile.generateThumbnail(file, new File(uploadDirectory, fn + ".jpg"), 200);
     }
 
     @Override
     public List<UserFile> getUploaded() {
-        return list(uploadDirectory.listFiles(THUMBNAILS), null);
+        return list(uploadDirectory.listFiles(FILTER), null);
     }
 
     @Override
     public List<UserFile> getApproved() {
-        return list(approveDirectory.listFiles(THUMBNAILS), true);
+        return list(approveDirectory.listFiles(FILTER), true);
     }
 
     @Override
     public List<UserFile> getDeclined() {
-        return list(declineDirectory.listFiles(THUMBNAILS), false);
-    }
-
-    @Override
-    public List<UserFile> getArchived() {
-        return list(archiveDirectory.listFiles(IMAGES), null);
+        return list(declineDirectory.listFiles(FILTER), false);
     }
 
     private List<UserFile> list(File[] listFiles, Boolean approved) {
@@ -136,23 +120,11 @@ public class DefaultImageService implements ImageService {
         File uf = new File(uploadDirectory, name);
         File af = new File(approveDirectory, name);
         uf.renameTo(af);
-        
-        uf = new File(uploadDirectory, UserFile.getThumbName(name));
-        af = new File(approveDirectory, UserFile.getThumbName(name));
-        if (uf.exists()) {
-            uf.renameTo(af);
-        }
     }
 
     public void decline(String name) {
         File uf = new File(uploadDirectory, name);
         File af = new File(declineDirectory, name);
         uf.renameTo(af);
-        
-        uf = new File(uploadDirectory, UserFile.getThumbName(name));
-        af = new File(declineDirectory, UserFile.getThumbName(name));
-        if (uf.exists()) {
-            uf.renameTo(af);
-        }
     }
 }

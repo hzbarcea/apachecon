@@ -58,10 +58,36 @@ public class UserFile implements Serializable {
         File f = small ? thumb : file;
         if (f == null) {
         	// assume we only deal with .jpg files at this point
-            File f2 = new File(file.getParentFile(), getThumbName(file.getName()));
+            // File f2 = new File(file.getParentFile(), getThumbName(file.getName()));
+        	File f2 = file;
             if (!f2.exists()) {
                 try {
-                	thumb = generateThumbnail(file, f2, 200) ? f2 : file;
+                    BufferedImage i = ImageIO.read(new FileInputStream(file));
+                    int w = i.getWidth();
+                    int h = i.getHeight();
+                    int maxSize = 200;
+
+                    if ((w > maxSize) || (h > maxSize)) {
+                        int neww;
+                        int newh;
+                        if (w > h) {
+                            neww = maxSize;
+                            newh = (maxSize * h) / w;
+                        } else {
+                            neww = (maxSize * w) / h;
+                            newh = maxSize;
+                        }
+
+                        BufferedImage bdest = new BufferedImage(neww, newh, i.getType());
+                        Graphics2D g = bdest.createGraphics();
+                        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+                        g.drawImage(i, 0, 0, neww , newh, null);
+                        g.dispose();
+	                    ImageIO.write(bdest, getType(), f2);
+	                    thumb = f2;
+                    } else {
+                        thumb = file;
+                    }
                 } catch (IOException ex) {
                     thumb = file;
                 }
@@ -100,12 +126,12 @@ public class UserFile implements Serializable {
     }
 
     public static String getThumbName(String filename) {
-        return filename.startsWith("thumb_") ? filename : "thumb_" + filename;
+        return filename.startsWith("thumb-") ? filename : "thumb-" + filename;
     }
 
     public static boolean generateThumbnail(File file, File thumb, int maxSize) throws IOException {
         if (thumb.exists()) {
-        	return false;
+            return false;
         }
 
     	BufferedImage i = ImageIO.read(new FileInputStream(file));
@@ -117,6 +143,7 @@ public class UserFile implements Serializable {
         int newh = h;
         boolean resize = false;
         if ((w > maxSize) || (h > maxSize)) {
+        	resize = true;
             if (w > h) {
                 neww = maxSize;
                 newh = (maxSize * h) / w;

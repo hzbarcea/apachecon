@@ -16,8 +16,14 @@
  */
 package com.apachecon.memories.speechbubble;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -53,5 +59,43 @@ public class ImageWriter {
         File output = new File(target, filename + "." + imageFormat);
         LOG.debug("Writing '{}' image to file: {}", imageFormat, output.getAbsolutePath());
         ImageIO.write(img, imageFormat, output);
+    }
+
+    public static void generateThumbnail(File source, File parent, int maxSize) throws IOException {
+    	String fn = source.getName().substring(0, source.getName().lastIndexOf('.'));
+    	File thumb = new File(parent, fn + ".jpg");
+        if (thumb.exists()) {
+            LOG.debug("Thumbnail already present for {}", thumb.getAbsoluteFile());
+            return;
+        }
+
+        BufferedImage i = ImageIO.read(new FileInputStream(source));
+        int w = i.getWidth();
+        int h = i.getHeight();
+
+        int neww = w;
+        int newh = h;
+        if ((w > maxSize) || (h > maxSize)) {
+            if (w > h) {
+                neww = maxSize;
+                newh = (maxSize * h) / w;
+            } else {
+                neww = (maxSize * w) / h;
+                newh = maxSize;
+            }
+        }
+
+        BufferedImage bdest = new BufferedImage(neww, newh, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = bdest.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+
+        // Force white background if converting from ARGB types
+        g.setBackground(Color.WHITE);
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, neww, newh);
+        g.drawImage(i, 0, 0, neww , newh, null);
+        g.dispose();
+        ImageIO.write(bdest, "jpg", thumb);
+        LOG.debug("Thumbnail generated at {}", thumb.getAbsoluteFile());
     }
 }
