@@ -24,7 +24,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -32,7 +31,6 @@ import java.util.List;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +47,7 @@ public class SpeechBubble {
     private static final int MAX_HEIGHT = 130;
     private static final int OUT_PADDING = 8;
     private static final int BUBBLE_WIDTH = MAX_WIDTH - 2 * OUT_PADDING;
-    private static final int BUBBLE_HEIGHT = 80;
+    private static final int BUBBLE_HEIGHT = 84;
     private static final int IN_PADDING = 4;
     private static final int ARROW_HEIGHT = 12;
     private static final int ARROW_WIDTH = 8;
@@ -199,15 +197,7 @@ public class SpeechBubble {
         BufferedImage image = new BufferedImage(BUBBLE_WIDTH, BUBBLE_HEIGHT, BufferedImage.TYPE_INT_RGB);
         FontMetrics fm = image.createGraphics().getFontMetrics();
         List<String> lines = this.formatText(s, fm);
-/*
-        // Now we can create the final image with the correct dimensions
-        int h = lines.size() * fm.getHeight() + PIC_WIDTH + 2 * OUT_PADDING + IN_PADDING;
-        image = new BufferedImage(width, h, BufferedImage.TYPE_INT_RGB);
-        Graphics2D graphics = image.createGraphics();
-        graphics.setColor(Color.WHITE);
-        graphics.fillRect(0, 0, width, h);
-        paintBubble(lines, graphics);
-*/        
+
         image = new BufferedImage(MAX_WIDTH, MAX_HEIGHT, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = image.createGraphics();
         graphics.setColor(Color.WHITE);

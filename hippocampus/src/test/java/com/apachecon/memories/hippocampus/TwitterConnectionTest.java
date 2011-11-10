@@ -28,7 +28,7 @@ public class TwitterConnectionTest extends CamelSpringTestSupport {
 
     @Test
     public void testTweets() throws Exception {
-        template.sendBody("{{schedule.fetch-tweets}}", "content ignored... overwritten by pollEnrich");
+        template.sendBody("seda:tweet-search", "?q=apachecon&amp;since_id=0");
         Thread.sleep(5000);
     }
 }

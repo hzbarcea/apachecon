@@ -20,13 +20,8 @@ import java.util.List;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.processor.aggregate.AggregationStrategy;
-import org.apache.camel.util.ExchangeHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TwitterSearch {
-    private static final Logger LOG = LoggerFactory.getLogger(TwitterSearch.class);
-
     public List<Tweet> tweets(Search search) {
         return search.getResults();
     }
