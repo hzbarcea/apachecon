@@ -31,6 +31,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.image.NonCachingImage;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceStreamResource;
 import org.apache.wicket.util.resource.FileResourceStream;
@@ -73,7 +74,7 @@ public class UserFile implements Serializable {
         File f = small ? thumb : file;
         
         IResource resource = new ResourceStreamResource(new FileResourceStream(f));
-        return new Image(id, resource);
+        return new NonCachingImage(id, resource);
     }
 
     public Component createSmallThumb(String id) {
