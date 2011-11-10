@@ -73,7 +73,7 @@
 
     <maven-bundle-version>2.3.5</maven-bundle-version>
 
-    <ssh-port>222</ssh-port>
+    <ssh-port>2222</ssh-port>
     <ssh-host>127.0.0.1</ssh-host>
   </properties>
 
