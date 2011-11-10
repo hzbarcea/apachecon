@@ -26,8 +26,11 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.wicket.markup.html.form.upload.FileUpload;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DefaultImageService implements ImageService {
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultImageService.class);
 
     private static final FilenameFilter FILTER = new FilenameFilter() {
         @Override
@@ -121,6 +124,8 @@ public class DefaultImageService implements ImageService {
     public void approve(String name) {
         File uf = new File(uploadDirectory, name);
         File af = new File(approveDirectory, name);
+        LOG.info("Approving:  " + uf + "   exist: " + uf.exists());
+        
         uf.renameTo(af);
     }
 

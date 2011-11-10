@@ -85,7 +85,7 @@ public class UserFile implements Serializable {
     }
 
     public String getName() {
-        return file.getName();
+        return thumb.getName();
     }
 
     public String getType() {
