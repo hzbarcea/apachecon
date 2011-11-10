@@ -97,7 +97,7 @@ public class DefaultImageService implements ImageService {
         files.addAll(getUploaded());
         files.addAll(getApproved());
         files.addAll(getDeclined());
-        Collections.shuffle(files);
+        //Collections.shuffle(files);
         return files;
     }
 

@@ -52,6 +52,7 @@ public class ScrapbookPage extends WebPage {
         links.add(Upload.class);
         Roles roles = AuthenticatedWebSession.get().getRoles();
         if (roles != null && roles.hasRole("admin")) {
+            links.add(Browse.class);
             links.add(Approve.class);
             links.add(Logout.class);
         } else {
