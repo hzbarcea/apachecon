@@ -24,9 +24,15 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,46 +45,27 @@ public class SpeechBubble {
     };
     private static final Random RAND = new Random();
     
-    private static final int MAX_WIDTH = 195;
+    private static final int MAX_WIDTH = 194;
     private static final int MAX_HEIGHT = 130;
-    private static final int PIC_WIDTH = 48;
     private static final int OUT_PADDING = 8;
+    private static final int BUBBLE_WIDTH = MAX_WIDTH - 2 * OUT_PADDING;
+    private static final int BUBBLE_HEIGHT = 80;
     private static final int IN_PADDING = 4;
     private static final int ARROW_HEIGHT = 12;
     private static final int ARROW_WIDTH = 8;
-    private static final int ARROW_DELTA = 24;
+    private static final int ARROW_DELTA = 40;
+    private static final int ICON_SIZE = 40;
     private static final Font DEF_FONT = new Font(Font.SERIF, Font.PLAIN, 12);
 
-    private int width;
-    private int height;
     private Font font;
+    private BufferedImage twitterLogo;
 
     public SpeechBubble() {
         this(MAX_WIDTH, MAX_HEIGHT, DEF_FONT);
     }
 
     public SpeechBubble(int width, int height, Font font) {
-        boolean outofbounds = width > MAX_WIDTH || width < 2 * OUT_PADDING + 2 * ARROW_DELTA + ARROW_WIDTH;
-        this.setWidth(outofbounds ? MAX_WIDTH : width);
-        outofbounds = height > MAX_HEIGHT || height < 2 * OUT_PADDING + 2 * PIC_WIDTH + IN_PADDING;
-        this.setHeight(outofbounds ? MAX_HEIGHT : height);
         this.setFont(font != null ? font : DEF_FONT);
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
     }
 
     public Font getFont() {
@@ -89,6 +76,27 @@ public class SpeechBubble {
         this.font = font;
     }
 
+
+	public BufferedImage getTwitterLogo() {
+		if (twitterLogo == null) {
+	        InputStream in = getClass().getResourceAsStream("/img/twitter-logo.png");
+	        try {
+	        	BufferedImage logo = ImageIO.read(in);
+
+	            twitterLogo = new BufferedImage(ICON_SIZE, ICON_SIZE, BufferedImage.TYPE_INT_RGB);
+	            Graphics2D g = twitterLogo.createGraphics();
+	            g.drawImage(logo, 0, 0, ICON_SIZE, ICON_SIZE, null);
+	            g.dispose();
+	        } catch (IOException e) {
+	        	// shouldn't happen
+	        }
+		}
+		return twitterLogo;
+	}
+
+	public void setTwitterLogo(BufferedImage twitterLogo) {
+		this.twitterLogo = twitterLogo;
+	}
     /**
      * Format message as a collection of lines to display to fit in a given
      * width
@@ -104,9 +112,7 @@ public class SpeechBubble {
             return null;
         }
 
-        int bubbleWidth = getWidth() - 2 * OUT_PADDING;
-        int bubbleHeight = getHeight() - 2 * OUT_PADDING - PIC_WIDTH - IN_PADDING;
-        int lineCount = bubbleHeight / fm.getHeight();
+        int lineCount = BUBBLE_HEIGHT / fm.getHeight();
 
         List<String> lines = new ArrayList<String>(lineCount);
         String[] tokens = text.split(" ");
@@ -117,7 +123,7 @@ public class SpeechBubble {
         for (String word : tokens) {
             int w = fm.charsWidth((word + " ").toCharArray(), 0, word.length() + 1);
             lineWidth += w;
-            if (lineWidth > bubbleWidth) {
+            if (lineWidth > BUBBLE_WIDTH) {
                 if (lines.size() >= lineCount - 1) {
                     line += "...";
                     break;
@@ -141,26 +147,26 @@ public class SpeechBubble {
      * @return array of lines to be displayed
      */
     public void paintBubble(List<String> lines, Graphics2D graphics) {
-        FontMetrics fm = graphics.getFontMetrics();
-        int bubbleWidth = width - 2 * OUT_PADDING;
-        int bubbleHeight = lines.size() * fm.getHeight() + 2 * IN_PADDING;
+        // Add the twitter logo
+        BufferedImage logo = getTwitterLogo();
+        if (logo != null) {
+        	graphics.drawImage(logo, MAX_WIDTH - ICON_SIZE - OUT_PADDING, MAX_HEIGHT - ICON_SIZE, null);
+        }
 
         graphics.setPaint(new GradientPaint(OUT_PADDING, OUT_PADDING, randomGradient(), 
-            OUT_PADDING, bubbleHeight - OUT_PADDING, Color.WHITE));
+            OUT_PADDING, BUBBLE_HEIGHT - OUT_PADDING, Color.WHITE));
         // First thing is to draw the bubble with a thin black outline
         int arc = IN_PADDING * 4;
-        graphics.fillRoundRect(OUT_PADDING, OUT_PADDING, bubbleWidth, bubbleHeight, arc, arc);
+        graphics.fillRoundRect(OUT_PADDING, OUT_PADDING, BUBBLE_WIDTH, BUBBLE_HEIGHT, arc, arc);
         graphics.setColor(Color.BLACK);
-        graphics.drawRoundRect(OUT_PADDING, OUT_PADDING, bubbleWidth, bubbleHeight, arc, arc);
+        graphics.drawRoundRect(OUT_PADDING, OUT_PADDING, BUBBLE_WIDTH, BUBBLE_HEIGHT, arc, arc);
 
         // With an arror at the bottom
         // TODO: add orientation, maybe
         graphics.setColor(Color.WHITE);
-        Point arrowLeft = new Point(OUT_PADDING + bubbleWidth - ARROW_DELTA - ARROW_WIDTH, OUT_PADDING
-                                                                                           + bubbleHeight);
-        Point arrowRight = new Point(OUT_PADDING + bubbleWidth - ARROW_DELTA, OUT_PADDING + bubbleHeight);
-        Point arrowBottom = new Point(OUT_PADDING + bubbleWidth - ARROW_DELTA, OUT_PADDING + bubbleHeight
-                                                                               + ARROW_HEIGHT);
+        Point arrowLeft = new Point(OUT_PADDING + BUBBLE_WIDTH - ARROW_DELTA - ARROW_WIDTH, OUT_PADDING + BUBBLE_HEIGHT);
+        Point arrowRight = new Point(OUT_PADDING + BUBBLE_WIDTH - ARROW_DELTA, OUT_PADDING + BUBBLE_HEIGHT);
+        Point arrowBottom = new Point(OUT_PADDING + BUBBLE_WIDTH - ARROW_DELTA, OUT_PADDING + BUBBLE_HEIGHT + ARROW_HEIGHT);
         Polygon arrow = new Polygon(new int[] {arrowLeft.x, arrowRight.x, arrowBottom.x},
                                     new int[] {arrowLeft.y, arrowRight.y, arrowBottom.y}, 3);
         graphics.fillPolygon(arrow);
@@ -170,6 +176,7 @@ public class SpeechBubble {
 
         graphics.setColor(Color.BLACK);
         int offset = OUT_PADDING + IN_PADDING;
+        FontMetrics fm = graphics.getFontMetrics();
         for (int i = 0; i < lines.size(); i++) {
             graphics.drawString(lines.get(i), offset, offset + (i + 1) * fm.getHeight());
         }
@@ -189,7 +196,7 @@ public class SpeechBubble {
      */
     public BufferedImage generateBubbleImage(String s) {
         // Need a temporary image to process text lines
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        BufferedImage image = new BufferedImage(BUBBLE_WIDTH, BUBBLE_HEIGHT, BufferedImage.TYPE_INT_RGB);
         FontMetrics fm = image.createGraphics().getFontMetrics();
         List<String> lines = this.formatText(s, fm);
 /*
@@ -206,11 +213,12 @@ public class SpeechBubble {
         graphics.setColor(Color.WHITE);
         graphics.fillRect(0, 0, MAX_WIDTH, MAX_HEIGHT);
         paintBubble(lines, graphics);
+        graphics.dispose();
 
         return image;
     }
     
     public static Color randomGradient() {
-    	return GRADIENTS[RAND.nextInt() % GRADIENTS.length];    	
+    	return GRADIENTS[RAND.nextInt(GRADIENTS.length)];    	
     }
 }

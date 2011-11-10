@@ -23,10 +23,13 @@ import org.junit.Test;
 
 public class MessageBubbleTest {
 
+	private static final String TWEET = "The #ApacheCon Memories demo is live. " 
+	    + "Please send in your pics and we'll generate a mosaic";
+	
     @Test
     public void testLastBubble() throws IOException {
         SpeechBubble bubble = new SpeechBubble();
-        BufferedImage img = bubble.generateBubbleImage("Apachecon test");
+        BufferedImage img = bubble.generateBubbleImage(TWEET);
         ImageWriter.write(img, "bubble", "target", "jpg");
     }
 }

@@ -98,6 +98,7 @@ public class ImageWriter {
         g.fillRect(0, 0, neww, newh);
         g.drawImage(i, 0, 0, neww , newh, null);
         g.dispose();
+
         ImageIO.write(bdest, "jpg", thumb);
         LOG.debug("Thumbnail generated at {}", thumb.getAbsoluteFile());
     }
