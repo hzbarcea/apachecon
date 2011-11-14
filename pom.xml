@@ -80,6 +80,7 @@
   <modules>
     <module>scrapbook</module>
     <module>speechbubble</module>
+    <module>service-jaas</module>
     <module>hippocampus</module>
     <module>branding</module>
     <module>emporium</module>

@@ -36,7 +36,7 @@ public class MailRouteBuilder extends RouteBuilder {
     public void configure() throws Exception {
         from("{{mail.inbox}}").routeId("mail-feed").noAutoStartup()
             .split(attachments()).filter(images()).setHeader(Exchange.FILE_PARENT)
-            .simple("${properties:memories-prod.properties:deploy.outbox}")
+            .simple("${properties:memories-test.properties:deploy.outbox}")
             .setHeader(Exchange.FILE_NAME, randomName()).to("{{mail.target}}");
     }
 

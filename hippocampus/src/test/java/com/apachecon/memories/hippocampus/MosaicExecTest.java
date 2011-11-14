@@ -29,11 +29,6 @@ public class MosaicExecTest extends CamelSpringTestSupport {
 
     @Test
     public void testMosaic() throws Exception {
-        template.sendBody("{{schedule.generate}}", ""); // just need a trigger
-/*
-    	MockEndpoint mock = (MockEndpoint)context.getEndpoint("mock:result");
-        mock.expectedMinimumMessageCount(1);
-        mock.assertIsSatisfied();
-*/
+    	template.sendBody("{{schedule.generate}}", ""); // just need a trigger
     }
 }

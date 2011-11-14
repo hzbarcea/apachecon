@@ -63,7 +63,7 @@
 
 
   <bean id="properties" class="org.apache.camel.component.properties.PropertiesComponent">
-    <property name="location" value="classpath:memories-prod.properties"/>
+    <property name="location" value="classpath:memories-test.properties"/>
   </bean>
 
   <bean id="speechBubble" class="com.apachecon.memories.speechbubble.SpeechBubble" />
@@ -177,7 +177,7 @@
     <!-- Mosaic generation service, implemented to execute a script 
         (and ultimately invoke pymos, the library we use for this purpose)
         at scheduled times. -->
-    <route id="generate-mosaic" autoStartup="false">
+    <route id="generate-mosaic" autoStartup="true">
       <from uri="{{schedule.generate}}" />
       <setHeader headerName="CamelExecCommandArgs"><constant>feather</constant></setHeader>
       <to uri="exec:{{script.generate}}" />
