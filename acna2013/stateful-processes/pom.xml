@@ -37,6 +37,7 @@
     <junit.version>4.8.1</junit.version>
 
     <maven-bundle-version>2.3.5</maven-bundle-version>
+    <maven-exec-version>1.2.1</maven-exec-version>
   </properties>
 
 
@@ -53,7 +54,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-netty</artifactId>
+      <artifactId>camel-jaxb</artifactId>
       <version>${camel.version}</version>
     </dependency>
     <dependency>
@@ -119,11 +120,20 @@
         </configuration>
       </plugin>
 
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>${maven-exec-version}</version>
+        <configuration>
+          <mainClass>com.apachecon.camel.stateful.Main</mainClass>
+          <includePluginDependencies>false</includePluginDependencies>
+        </configuration>
+      </plugin>
       <!-- allows the route to be ran via 'mvn camel:run' -->
       <plugin>
         <groupId>org.apache.camel</groupId>
         <artifactId>camel-maven-plugin</artifactId>
-        <version>2.8.2</version>
+        <version>${camel.version}</version>
       </plugin>
     </plugins>
   </build>

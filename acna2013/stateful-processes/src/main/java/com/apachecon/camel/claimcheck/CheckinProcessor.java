@@ -52,6 +52,11 @@ public class CheckinProcessor implements Processor {
 		return this;
 	}
 
+	public CheckinProcessor ttl(long ttl) {
+		// ignore ttl
+		return this;
+	}
+
 	public void process(Exchange exchange) throws Exception {
 		if (executor == null) {
 		    executor = exchange.getContext().getExecutorServiceManager().newFixedThreadPool(this, "CLAIM-CHECK", 4);

@@ -14,33 +14,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.apachecon.camel.stateful;
-
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.test.junit4.CamelTestSupport;
-import org.junit.Before;
-import org.junit.Test;
-
-
-public class StatefulProcessTest extends CamelTestSupport {
-
-	@Before
-	public void setUp() throws Exception {
-		super.setUp();
-	}
-
-	@Test
-    public void testSimpleStatefulProcess() throws Exception {
-	}
-
-    @Override
-    protected RouteBuilder createRouteBuilder() throws Exception {
-        return new RouteBuilder() {
-            public void configure() {
-                from("direct:simple")
-                    .to("seda:queue");
-            }
-        };
-    }
-
-}
+@javax.xml.bind.annotation.XmlSchema(namespace = "http://camel.apachecon.com/expedium", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+package com.apachecon.camel.expedium.types;

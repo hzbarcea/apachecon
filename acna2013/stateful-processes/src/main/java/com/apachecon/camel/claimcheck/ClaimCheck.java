@@ -24,6 +24,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.Expression;
+import org.apache.camel.Predicate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultExchange;
 import org.apache.camel.processor.aggregate.AggregationStrategy;
@@ -31,6 +32,7 @@ import org.apache.camel.processor.aggregate.AggregationStrategy;
 
 public class ClaimCheck {
 	public static final String CLAIMCHECK_TAG_HEADER = "CamelClaimcheckTag";
+	public static final String CLAIMCHECK_TTL_HEADER = "CamelClaimcheckTtl";
 	private static final AtomicInteger SIMPLE_COUNTER = new AtomicInteger(0);
 	private static Map<String, BayInfo> CHECKOUT_BAYS = new ConcurrentHashMap<String, BayInfo>();
 
@@ -79,6 +81,7 @@ public class ClaimCheck {
     	public MessageStore carousel;
     	public String uri;
     	public AggregationStrategy strategy;
+    	public Predicate check;
     	private Endpoint exit;
     	
     	public synchronized Endpoint getEndpoint(CamelContext context) {
@@ -89,12 +92,14 @@ public class ClaimCheck {
     	}
     }
     
-    public static BayInfo createBayInfoInMemory(String bay, String uri, AggregationStrategy strategy) {
+    public static BayInfo createBayInfoInMemory(String bay, String uri, 
+            AggregationStrategy strategy, Predicate check) {
     	BayInfo bi = new BayInfo();
     	bi.id = bay;
     	bi.main = new MemoryMessageStore();
     	bi.carousel = new MemoryMessageStore();
     	bi.strategy = strategy;
+    	bi.check = check;
     	bi.uri = uri;
     	return bi;
     }

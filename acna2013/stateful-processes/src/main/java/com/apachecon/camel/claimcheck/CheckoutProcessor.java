@@ -17,6 +17,7 @@
 package com.apachecon.camel.claimcheck;
 
 import org.apache.camel.Exchange;
+import org.apache.camel.Predicate;
 import org.apache.camel.Processor;
 import org.apache.camel.Producer;
 import org.apache.camel.processor.aggregate.AggregationStrategy;
@@ -31,6 +32,7 @@ public class CheckoutProcessor implements Processor {
 	
 	private String store;
 	private AggregationStrategy strategy;
+	private Predicate test;
 	private BayInfo bayInfo;
 	private boolean carousel = false;
 
@@ -44,8 +46,13 @@ public class CheckoutProcessor implements Processor {
 		return this;
 	}
 
+	public CheckoutProcessor check(Predicate test) {
+		this.test = test;
+		return this;
+	}
+
 	public CheckoutProcessor proceed(String exit) {
-		bayInfo = ClaimCheck.createBayInfoInMemory(store, exit, strategy);
+		bayInfo = ClaimCheck.createBayInfoInMemory(store, exit, strategy, test);
 		ClaimCheck.useBay(bayInfo);
 		return this;
 	}
@@ -67,10 +74,17 @@ public class CheckoutProcessor implements Processor {
 			// Let's aggregate the two exchanges, but order matters!
 			// carousel Exchange should be 2nd arg
 			Exchange other = waiting.get(tag);
+			waiting.remove(tag);
 			Exchange resolved = carousel 
 			    ? bayInfo.strategy.aggregate(other, exchange)
 				: bayInfo.strategy.aggregate(exchange, other);
 			
+			// check belongings, anything left to do?
+			if (bayInfo.check != null && !bayInfo.check.matches(resolved)) {
+				// not done, wait for more 'baggage'
+				waiting.put(tag, resolved);
+				return;
+			}
 			// proceed to exit
 			LOG.info("Corresponding exchange for tag '{}' arrived. Send to destination", tag);
 			Producer exit = bayInfo.getEndpoint(exchange.getContext()).createProducer();

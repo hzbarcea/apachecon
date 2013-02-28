@@ -62,19 +62,22 @@ public class ClaimCheckTest extends CamelTestSupport {
                     .process(ClaimCheck.checkin()
                         .at(constant("direct:checkin"))
                         .attach(tag(exchangeId()))
-                        .keep(header(DEMO_HEADER)))
+                        .keep(header(DEMO_HEADER))
+                        .ttl(10000))
+                    .to("seda:queue")
                     .setHeader(Exchange.FILE_NAME, property(ClaimCheck.CLAIMCHECK_TAG_HEADER))
-                    .to("file:target/acna/messages")
-                    .to("seda:queue");
+                    .to("file:target/acna/messages");
                 
                 from("direct:checkin")
                     .setHeader(Exchange.FILE_NAME, property(ClaimCheck.CLAIMCHECK_TAG_HEADER))
                     .to("file:target/acna/checkin");
 
                 from("seda:queue")
+                    // .delay(5000)
                     .process(ClaimCheck.co()
                         .bay("Portland")
                         .aggregate(baggageToUpper())
+                        .check(null)
                         .proceed("direct:exit"));
 
                 from("direct:exit")
@@ -82,6 +85,7 @@ public class ClaimCheckTest extends CamelTestSupport {
                     .to("mock:exit");
 
                 from("file:target/acna/arrival")
+                    .convertBodyTo(String.class)
                     .setProperty(ClaimCheck.CLAIMCHECK_TAG_HEADER, header("Exchange.FILE_NAME"))
                     .to("seda:arrival");
 
@@ -90,7 +94,7 @@ public class ClaimCheckTest extends CamelTestSupport {
                     .unload("seda:arrival")
             	    .bay("Portland");
                 
-                // for test purposes
+                // test route; start this route after some delay to simulate some long processing
                 from("file:target/acna/checkin").routeId("baggage").autoStartup(false)
                     .to("file:target/acna/arrival");
             }
