@@ -54,8 +54,8 @@ public class ClusterTest {
 
     @BeforeClass
     public static void startBroker() throws Exception {
-        createBroker("broker2-mt");
-        createBroker("broker1-mt");
+        createBroker("broker2");
+        createBroker("broker1");
     }
 
     @AfterClass

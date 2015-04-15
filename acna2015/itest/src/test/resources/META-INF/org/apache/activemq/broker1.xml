@@ -42,6 +42,15 @@
 
     <amq:plugins>
       <!-- amq:runtimeConfigurationPlugin checkPeriod="10000" / -->
+
+      <amq:simpleAuthenticationPlugin anonymousAccessAllowed="true">
+        <amq:users>
+          <amq:authenticationUser username="system@US" password="password" groups="users,admins" />
+          <amq:authenticationUser username="system@EU" password="password" groups="users,admins" />
+          <amq:authenticationUser username="user@US" password="password" groups="users" />
+          <amq:authenticationUser username="guest@US" password="password" groups="guests" />
+        </amq:users>
+      </amq:simpleAuthenticationPlugin>
     </amq:plugins>
   </amq:broker>
 
