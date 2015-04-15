@@ -23,7 +23,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
@@ -34,7 +33,6 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.broker.BrokerFactory;
 import org.apache.activemq.broker.BrokerService;
 import org.apache.activemq.command.ActiveMQTextMessage;
-import org.apache.activemq.network.DiscoveryNetworkConnector;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -71,7 +69,6 @@ public class ClusterTest {
     public void testAuthWithMultipleTransports() throws Exception {
         Assert.assertEquals(2, BROKERS.size());
 
-        // ConnectionFactory factory =  new ActiveMQConnectionFactory(BrokerRegistry.getInstance().findFirst().getVmConnectorURI());
         ConnectionFactory fc =  new ActiveMQConnectionFactory("tcp://localhost:62616");
         ConnectionFactory fp =  new ActiveMQConnectionFactory("tcp://localhost:61616");
         Connection consumerConnection = fc.createConnection();
@@ -101,8 +98,7 @@ public class ClusterTest {
         producer.send(producerSession.createTextMessage("QQQ: $1000.00"));
         messageSignal.await(1000, TimeUnit.MILLISECONDS);
         Assert.assertEquals(0, messageSignal.getCount());
-        
-        // DiscoveryNetworkConnector cnx = new DiscoveryNetworkConnector();
+
         producerConnection.stop();
         consumerConnection.stop();
     }

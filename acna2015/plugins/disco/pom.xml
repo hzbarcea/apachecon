@@ -22,27 +22,16 @@
 
   <parent>
     <groupId>org.example.activemq</groupId>
-    <artifactId>parent</artifactId>
+    <artifactId>plugins</artifactId>
     <version>1.0.0</version>
   </parent>
 
-  <artifactId>itest</artifactId>
+  <artifactId>disco-plugin</artifactId>
   <packaging>jar</packaging>
-  <name>ActiveMQ :: Examples :: Integration</name>
-  <description>Message Queueing Security Integration Tests</description>
+  <name>ActiveMQ :: Examples :: Plugins :: Disco</name>
+  <description>Message Queueing Discovery Example</description>
 
   <dependencies>
-    <dependency>
-      <groupId>org.example.activemq</groupId>
-      <artifactId>disco-plugin</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.example.activemq</groupId>
-      <artifactId>zones-plugin</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
     <dependency>
       <groupId>org.apache.activemq</groupId>
       <artifactId>activemq-broker</artifactId>
@@ -50,14 +39,6 @@
     <dependency>
       <groupId>org.apache.activemq</groupId>
       <artifactId>activemq-web</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-partition</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-runtime-config</artifactId>
     </dependency>
 
     <dependency>
@@ -96,15 +77,4 @@
     </dependency>
   </dependencies>
 
-  <build>
-    <defaultGoal>install</defaultGoal>
-
-    <plugins>
-      <!-- allows the route to be ran via 'mvn camel:run' -->
-      <plugin>
-        <groupId>org.apache.camel</groupId>
-        <artifactId>camel-maven-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </build>
 </project>
